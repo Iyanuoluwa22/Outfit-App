@@ -9,7 +9,7 @@
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/default_profile_image"
+        android:src="@drawable/button_background_blue"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"/>
 

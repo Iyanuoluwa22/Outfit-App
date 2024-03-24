@@ -10,7 +10,7 @@
         android:id="@+id/stitchPhotoImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/default_stitch_photo"
+        android:src="@drawable/circle_placeholder"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"/>
 
