@@ -17,14 +17,14 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        // Sample data (replace with your actual data)
+        // Sample data will replace with actual data
         val stitches = listOf(
             Stitch("https://example.com/stitch1.jpg", 10, 5),
             Stitch("https://example.com/stitch2.jpg", 20, 8),
             Stitch("https://example.com/stitch3.jpg", 15, 3)
         )
 
-        // Initialize RecyclerView
+        // Initializes RecyclerView
         stitchesAdapter = StitchesAdapter(stitches)
 
         binding.stitchesRecyclerView.apply {
@@ -32,20 +32,20 @@ class UserProfileActivity : AppCompatActivity() {
             adapter = stitchesAdapter
         }
 
-        // Set user data (replace with actual user data)
-        binding.profileImageView.setImageResource(0) // Set it to -> R.drawable.default_profile_image
+        // Setting user data will replace with actual user data
+        binding.profileImageView.setImageResource(0)
         binding.usernameTextView.text = "Username"
         binding.followersCountTextView.text = "Followers: 100"
         binding.followingCountTextView.text = "Following: 50"
 
         // Set click listener for follow button
         binding.followButton.setOnClickListener {
-            // Implement follow/unfollow logic here
+            // Will implement follow/unfollow code here
         }
 
         // Set click listener for upload photo button
         binding.uploadPhotoButton.setOnClickListener {
-            // Implement photo upload functionality here
+            // Will implement photo upload functionality here
         }
     }
 }

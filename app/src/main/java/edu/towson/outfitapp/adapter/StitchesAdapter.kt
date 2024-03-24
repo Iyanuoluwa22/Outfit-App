@@ -31,9 +31,6 @@ class StitchesAdapter(private val stitches: List<Stitch>) : RecyclerView.Adapter
         private val commentsCountTextView: TextView = itemView.findViewById(R.id.commentsCountTextView)
 
         fun bind(stitch: Stitch) {
-            // Load stitch photo using Glide or Picasso
-            // Example: Glide.with(itemView.context).load(stitch.photoUrl).into(stitchPhotoImageView)
-
             likesCountTextView.text = "Likes: ${stitch.likesCount}"
             commentsCountTextView.text = "Comments: ${stitch.commentsCount}"
         }
