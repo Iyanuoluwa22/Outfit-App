@@ -1,14 +1,15 @@
 package edu.towson.outfitapp.ui.theme
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.towson.outfitapp.R
 import edu.towson.outfitapp.adapter.StitchesAdapter
 import edu.towson.outfitapp.databinding.ActivityUserProfileBinding
 import edu.towson.outfitapp.model.Stitch
+import edu.towson.outfitapp.R.drawable.circle_placeholder
 
-class UserProfileActivity : AppCompatActivity() {
+class UserProfileActivity : ComponentActivity() {
 
     private lateinit var stitchesAdapter: StitchesAdapter
     private var binding = ActivityUserProfileBinding.inflate(layoutInflater)
@@ -33,7 +34,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         // Setting user data will replace with actual user data
-        binding.profileImageView.setImageResource(0)
+        binding.profileImageView.setImageResource(circle_placeholder)
         binding.usernameTextView.text = "Username"
         binding.followersCountTextView.text = "Followers: 100"
         binding.followingCountTextView.text = "Following: 50"
@@ -45,7 +46,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         // Set click listener for upload photo button
         binding.uploadPhotoButton.setOnClickListener {
-            // Will implement photo upload functionality here
+            // Will implement the photo upload functionality here
         }
     }
 }

@@ -1,16 +1,11 @@
 package edu.towson.outfitapp.profile
 
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -37,7 +32,7 @@ fun UserProfileScreen() {
 
 @Composable
 fun ProfilePicture() {
-    // Replace defaultProfileImage with your image resource
+    // Replace with image resource
     Text("Profile Picture Placeholder", color = Color.Black)
 }
 
@@ -59,12 +54,11 @@ fun FollowingCount() {
 @Composable
 fun UploadPhotoButton() {
     Button(
-        onClick = { /* Handle upload photo button click */ },
+        onClick = {},
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .fillMaxWidth()
     ) {
-        Text("Upload Photo", color = Color.White)
+        Text("+", color = Color.White)
     }
 }
 
