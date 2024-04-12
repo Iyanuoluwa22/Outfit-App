@@ -16,6 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.signup.SignUpPage
+import androidx.compose.ui.tooling.preview.Preview
+import edu.towson.outfitapp.profile.UserProfileScreen
+import edu.towson.outfitapp.ui.theme.LoginScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,10 +38,18 @@ class MainActivity : ComponentActivity() {
                         UserProfileScreen()
                     }
                 }
+                // Move Surface inside the composable function
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    UserProfileScreen()
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -100,3 +111,5 @@ fun LoginScreen(navController: NavController) {
         }
     }
 }
+
+
