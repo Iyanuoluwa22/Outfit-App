@@ -30,9 +30,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -86,23 +87,24 @@ fun LoginScreen() {
             modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Login Button
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("userProfile") },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
 
                 ) {
                 Text(text = "Login")
             }
             Spacer(modifier = Modifier.width(10.dp) )
+            // Sign-up Button
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("signUp") },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
             ) {
                 Text(text = "Sign-Up")
 
             }
         }
-
     }
 }
 
