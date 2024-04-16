@@ -1,4 +1,4 @@
-package edu.towson.outfitapp.ui.theme
+package edu.towson.outfitapp.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -29,9 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.profile.UserProfileScreen
 
+
+public var userUserName : String = ""
 @Composable
 fun LoginScreen(navController: NavController) {
     Column(
@@ -55,7 +60,10 @@ fun LoginScreen(navController: NavController) {
 
         TextField(
             value = userName,
-            onValueChange = { userName = it },
+            onValueChange = { userName = it
+                            setUsername(userName)
+                userName = userUserName
+            },
             label = { Text("User Name") },
             modifier = Modifier.padding(10.dp),
             leadingIcon = {
@@ -89,7 +97,9 @@ fun LoginScreen(navController: NavController) {
         ) {
             // Login Button
             Button(
-                onClick = { navController.navigate("userProfile") },
+                onClick = {
+                    navController.navigate("userProfile")
+                          },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
 
                 ) {
@@ -102,10 +112,35 @@ fun LoginScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
             ) {
                 Text(text = "Sign-Up")
-
             }
         }
     }
+}
+
+private fun setUsername(userName: String) {
+    var modifiedUserName = ""
+    for (char in userName) {
+        if (char == ' ') {
+            modifiedUserName += ""
+        } else {
+            modifiedUserName += char
+        }
+    }
+    if (modifiedUserName.isBlank()) {
+        userUserName = "Username"
+    } else {
+        userUserName = modifiedUserName
+    }
+}
+
+fun getUsername(): String{
+    return userUserName
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreen() {
+    LoginScreen(navController = rememberNavController())
 }
 
 

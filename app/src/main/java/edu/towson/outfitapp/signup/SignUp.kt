@@ -35,7 +35,7 @@ class SignUp : ComponentActivity() {
                         }
                         // Defines the composable for UserProfileScreen
                         composable("userProfile") {
-                            UserProfileScreen()
+                            UserProfileScreen(navController)
                         }
                     }
                 }
