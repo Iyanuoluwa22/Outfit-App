@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.*
@@ -44,6 +45,18 @@ fun UserProfileScreen(navController: NavController) {
                     fontFamily = FontFamily.Cursive,
                     textAlign = TextAlign.Center
                 )
+            },
+            actions = {
+                IconButton(
+                    onClick = { navController.navigate("accountSettings") },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings",
+                        tint = Color.White
+                    )
+                }
             }
         )
     },
@@ -77,6 +90,10 @@ fun UserProfileScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly) {
                 FollowersCount()
                 FollowingCount()
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+                userBio()
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -190,6 +207,11 @@ private fun theBottomBar(navController : NavController){
             }
         }
     }
+}
+
+@Composable
+fun userBio(){
+    Text(text = "")
 }
 
 

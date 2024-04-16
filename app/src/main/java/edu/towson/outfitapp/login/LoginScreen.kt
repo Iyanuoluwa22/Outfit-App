@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -25,9 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -37,6 +41,7 @@ import edu.towson.outfitapp.profile.UserProfileScreen
 
 
 public var userUserName : String = ""
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navController: NavController) {
     Column(
@@ -58,6 +63,8 @@ fun LoginScreen(navController: NavController) {
             fontWeight = FontWeight.Bold,
             )
 
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         TextField(
             value = userName,
             onValueChange = { userName = it
@@ -73,7 +80,12 @@ fun LoginScreen(navController: NavController) {
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue,
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
         TextField(
             value = password,
@@ -89,7 +101,11 @@ fun LoginScreen(navController: NavController) {
                 disabledContainerColor = Color.Blue,
             ),
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
         Row(
             modifier = Modifier.padding(10.dp),
@@ -127,7 +143,7 @@ private fun setUsername(userName: String) {
         }
     }
     if (modifiedUserName.isBlank()) {
-        userUserName = "Username"
+        userUserName = ""
     } else {
         userUserName = modifiedUserName
     }
