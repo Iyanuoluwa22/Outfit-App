@@ -76,6 +76,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+    // manual adds
+    implementation("androidx.compose.material:material-icons-core:1.6.6")
+    implementation("androidx.compose.material:material-icons-extended:1.6.6")
     /* val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
