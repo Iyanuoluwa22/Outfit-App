@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextFieldDefaults
@@ -37,19 +38,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.towson.outfitapp.profile.UserProfileScreen
+import edu.towson.outfitapp.profile.isValidPassword
+import edu.towson.outfitapp.profile.isValidUsername
 
-
-public var userUserName : String = ""
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navController: NavController) {
+    var userName by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+
     Column(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var userName by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
         Icon(
             imageVector = Icons.Default.Person,
             contentDescription = null,
@@ -61,16 +64,12 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.padding(20.dp),
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Bold,
-            )
-
+        )
         val keyboardController = LocalSoftwareKeyboardController.current
 
         TextField(
             value = userName,
-            onValueChange = { userName = it
-                            setUsername(userName)
-                userName = userUserName
-            },
+            onValueChange = { userName = it},
             label = { Text("User Name") },
             modifier = Modifier.padding(10.dp),
             leadingIcon = {
@@ -114,14 +113,19 @@ fun LoginScreen(navController: NavController) {
             // Login Button
             Button(
                 onClick = {
-                    navController.navigate("userProfile")
-                          },
+                    val validUsername = isValidUsername(userName)
+                    val validPassword = isValidPassword(password)
+                    if (!validUsername || !validPassword) {
+                        showDialog = true
+                    } else {
+                        navController.navigate("userProfile")
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-
-                ) {
+            ) {
                 Text(text = "Login")
             }
-            Spacer(modifier = Modifier.width(10.dp) )
+            Spacer(modifier = Modifier.width(10.dp))
             // Sign-up Button
             Button(
                 onClick = { navController.navigate("signUp") },
@@ -130,27 +134,22 @@ fun LoginScreen(navController: NavController) {
                 Text(text = "Sign-Up")
             }
         }
-    }
-}
-
-private fun setUsername(userName: String) {
-    var modifiedUserName = ""
-    for (char in userName) {
-        if (char == ' ') {
-            modifiedUserName += ""
-        } else {
-            modifiedUserName += char
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Invalid Credentials") },
+                text = { Text("The username or password is invalid or Empty.") },
+                confirmButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
-    if (modifiedUserName.isBlank()) {
-        userUserName = ""
-    } else {
-        userUserName = modifiedUserName
-    }
-}
-
-fun getUsername(): String{
-    return userUserName
 }
 
 @Preview
@@ -158,5 +157,3 @@ fun getUsername(): String{
 fun PreviewLoginScreen() {
     LoginScreen(navController = rememberNavController())
 }
-
-

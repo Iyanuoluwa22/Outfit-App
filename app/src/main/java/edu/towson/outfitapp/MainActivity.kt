@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
-import edu.towson.outfitapp.profile.AccountSettings
 import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.signup.SignUpPage
 import edu.towson.outfitapp.login.LoginScreen
+import edu.towson.outfitapp.profile.AccountSettingsScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +27,10 @@ class MainActivity : ComponentActivity() {
                         UserProfileScreen(navController)
                     }
                     composable("accountSettings"){
-                        AccountSettings(navController)
+                        AccountSettingsScreen(navController)
+                    }
+                    composable("userFeed"){
+
                     }
                 }
             }
