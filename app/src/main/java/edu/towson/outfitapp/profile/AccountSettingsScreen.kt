@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -12,18 +13,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.data.User
 import edu.towson.outfitapp.data.changeUsername
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
+import edu.towson.outfitapp.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountSettingsScreen(navController: NavController) {
-    var newUsername by remember { mutableStateOf("") }
-    var newPassword by remember { mutableStateOf("") }
-    var newFirstName by remember { mutableStateOf("") }
-    var newLastName by remember { mutableStateOf("") }
+fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewModel) {
+    val mainUser by userViewModel.mainUser.collectAsState()
+    var newUsername by remember { mutableStateOf(mainUser?.username) }
+    var newPassword by remember { mutableStateOf(mainUser?.password) }
+    var newFirstName by remember { mutableStateOf(mainUser?.firstName) }
+    var newLastName by remember { mutableStateOf(mainUser?.lastName) }
     var showErrorPopup by remember { mutableStateOf(false) } // State for showing error popup
 
     Scaffold(
@@ -49,43 +53,55 @@ fun AccountSettingsScreen(navController: NavController) {
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(
-                value = newUsername,
-                onValueChange = { newUsername = it },
-                label = { Text("New Username") },
-                modifier = Modifier.padding(10.dp)
-            )
-            TextField(
-                value = newPassword,
-                onValueChange = { newPassword = it },
-                label = { Text("New Password") },
-                modifier = Modifier.padding(10.dp)
-            )
-            TextField(
-                value = newFirstName,
-                onValueChange = { newFirstName = it },
-                label = { Text("New First Name") },
-                modifier = Modifier.padding(10.dp)
-            )
-            TextField(
-                value = newLastName,
-                onValueChange = { newLastName = it },
-                label = { Text("New Last Name") },
-                modifier = Modifier.padding(10.dp)
-            )
+            newUsername?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newUsername = it },
+                    label = { Text("New Username") },
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+            newPassword?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newPassword = it },
+                    label = { Text("New Password") },
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+            newFirstName?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newFirstName = it },
+                    label = { Text("New First Name") },
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+            newLastName?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newLastName = it },
+                    label = { Text("New Last Name") },
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
             Row(
                 modifier = Modifier.padding(10.dp)
             ) {
                 Button(
                     onClick = {
-                        val validUsername = isValidUsername(newUsername)
-                        val validPassword = isValidPassword(newPassword)
-                        if (!validUsername || !validPassword) {
+                        val validUsername = newUsername?.let { isValidUsername(it) }
+                        val validPassword = newPassword?.let { isValidPassword(it) }
+                        if (!validUsername!! || !validPassword!!) {
                             showErrorPopup = true // Show popup if username or password is invalid
                         } else {
-                            changeUsername(newUsername)
+                            newUsername?.let { mainUser?.username?.let { it1 -> changeUsername(it1, it) } } // change to (oldUsername, newUsername)
                             navController.popBackStack()
                         }
                     },
@@ -96,13 +112,15 @@ fun AccountSettingsScreen(navController: NavController) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Button(
                     onClick = {
-                        // Navigate back logic
-                        navController.popBackStack()
+                        navController.navigate("login") {
+                            popUpTo("login") { inclusive = true }
+                        }
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Cancel")
+                    Text("Log Out")
                 }
+
             }
         }
     }
@@ -129,5 +147,9 @@ fun AccountSettingsScreen(navController: NavController) {
 @Preview
 @Composable
 fun PreviewAccountSettingsScreen() {
-    AccountSettingsScreen(navController = rememberNavController())
+    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
+    val dummyUserViewModel = UserViewModel().apply {
+        setUser(dummyUser)
+    }
+    AccountSettingsScreen(navController = rememberNavController(), dummyUserViewModel)
 }

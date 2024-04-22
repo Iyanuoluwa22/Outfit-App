@@ -2,7 +2,6 @@ package edu.towson.outfitapp.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,15 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.MainActivity
+import edu.towson.outfitapp.data.User
 import edu.towson.outfitapp.data.getUser
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
 import edu.towson.outfitapp.data.userExists
+import edu.towson.outfitapp.viewmodel.UserViewModel
 import java.util.Locale
 
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -111,6 +113,7 @@ fun LoginScreen(navController: NavController) {
                         val user = getUser(userName)
                         if (user != null) {
                             if(user.password == password){
+                                userViewModel.setUser(user)
                                 navController.popBackStack()
                                 navController.navigate("userProfile")
                             }else{
@@ -216,5 +219,9 @@ fun ShowAccountDialog(onDismiss: () -> Unit) {
 @Preview
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen(navController = rememberNavController())
+    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
+    val dummyUserViewModel = UserViewModel().apply {
+        setUser(dummyUser)
+    }
+    LoginScreen(navController = rememberNavController(),dummyUserViewModel)
 }

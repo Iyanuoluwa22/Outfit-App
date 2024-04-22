@@ -17,12 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.towson.outfitapp.data.getTheUsername
+import edu.towson.outfitapp.data.User
+import edu.towson.outfitapp.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
+    val mainUser by userViewModel.mainUser.collectAsState()
     Scaffold(topBar = {
         TopAppBar(
             modifier = Modifier.heightIn(10.dp,200.dp),
@@ -75,15 +77,15 @@ fun UserProfileScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center) {
-                Username()
+                mainUser?.let { Username(it) }
             }
 
 
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly) {
-                FollowersCount()
-                FollowingCount()
+                mainUser?.let { FollowersCount(it) }
+                mainUser?.let { FollowingCount(it) }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -108,21 +110,21 @@ fun ProfilePicture() {
 }
 
 @Composable
-fun Username() {
-    Text(text = getTheUsername(), color = Color.Black,
+fun Username(mainUser: User) {
+    Text(text = mainUser.username, color = Color.Black,
         fontFamily = FontFamily.Monospace) // change text back to accepted username
 }
 
 @Composable
-fun FollowersCount() {
-    Text("Followers: 100", color = Color.Black,
+fun FollowersCount(mainUser: User) {
+    Text("Followers: ${mainUser.getFollowers().size}", color = Color.Black,
         fontFamily = FontFamily.Monospace
     )
 }
 
 @Composable
-fun FollowingCount() {
-    Text("Following: 100", color = Color.Black,
+fun FollowingCount(mainUser: User) {
+    Text("Following: ${mainUser.getFollowing().size}", color = Color.Black,
         fontFamily = FontFamily.Monospace
     )
 }
@@ -212,5 +214,9 @@ fun userBio(){
 @Preview
 @Composable
 fun PreviewUserProfileScreen() {
-    UserProfileScreen(navController = rememberNavController())
+    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
+    val dummyUserViewModel = UserViewModel().apply {
+        setUser(dummyUser)
+    }
+    UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
 }

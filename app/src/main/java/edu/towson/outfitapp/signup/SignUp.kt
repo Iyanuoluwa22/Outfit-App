@@ -22,10 +22,11 @@ import edu.towson.outfitapp.data.isValidEmail
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
 import edu.towson.outfitapp.data.userExists
+import edu.towson.outfitapp.viewmodel.UserViewModel
 import java.util.Locale
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, userViewModel: UserViewModel) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var userName by remember { mutableStateOf("") }
@@ -166,6 +167,7 @@ fun SignUpScreen(navController: NavController) {
                     else{
                         val user = User(userName,password,firstName,lastName,email)
                         addUser(user)
+                        userViewModel.setUser(user)
                         navController.popBackStack()
                         navController.navigate("userProfile")
                     }
@@ -239,5 +241,9 @@ fun showAccountExistsDialog(onDismiss: () -> Unit) {
 @Preview
 @Composable
 fun PreviewSignUpScreen(){
-    SignUpScreen(navController = rememberNavController())
+    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
+    val dummyUserViewModel = UserViewModel().apply {
+        setUser(dummyUser)
+    }
+    SignUpScreen(navController = rememberNavController(),dummyUserViewModel)
 }

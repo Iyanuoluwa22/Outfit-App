@@ -21,6 +21,34 @@ package edu.towson.outfitapp.data
         return null
     }
 
+    fun changeUsername(oldUsername: String,newUsername : String){
+        val user = getUser(oldUsername)
+        if (user != null) {
+            user.username = newUsername
+        }
+    }
+
+    fun changePassword(username: String,password : String){
+        val user = getUser(username)
+        if (user != null) {
+            user.password = password
+        }
+    }
+
+    fun changeFirstName(username: String, firstName : String){
+        val user = getUser(username)
+        if (user != null) {
+            user.firstName = firstName
+        }
+    }
+
+    fun changeLastName(username: String, lastName : String){
+        val user = getUser(username)
+        if (user != null) {
+            user.lastName = lastName
+        }
+    }
+
     fun deleteUser(email: String){
         for (user in allUsers){
             if(user.email.equals(email)) allUsers.remove(user)

@@ -1,11 +1,14 @@
 package edu.towson.outfitapp.data
 
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.StateFlow
+
 class User(
     var username : String,
     var password : String,
     var firstName : String,
     var lastName : String,
-    var email : String) {
+    var email : String) : StateFlow<User?> {
 
     private var followers : MutableList<User> = mutableListOf()
     private var following : MutableList<User> = mutableListOf()
@@ -52,6 +55,15 @@ class User(
 
     fun getFollowing(): MutableList<User> {
         return following
+    }
+
+    override val replayCache: List<User?>
+        get() = TODO("Not yet implemented")
+    override val value: User?
+        get() = TODO("Not yet implemented")
+
+    override suspend fun collect(collector: FlowCollector<User?>): Nothing {
+        TODO("Not yet implemented")
     }
 
 }

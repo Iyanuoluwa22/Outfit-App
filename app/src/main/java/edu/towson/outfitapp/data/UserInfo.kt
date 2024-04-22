@@ -38,12 +38,3 @@ fun isValidEmail(emailInput: String): Boolean {
         val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
         return emailInput.matches(emailRegex)
 }
-
-
-fun getTheUsername(): String {
-        return username
-} // this function will eventually change so that we get a user via username and return their info
-
-fun changeUsername(userName : String){
-        username = userName
-}
