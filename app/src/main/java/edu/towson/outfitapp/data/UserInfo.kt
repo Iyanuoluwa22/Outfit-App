@@ -1,4 +1,4 @@
-package edu.towson.outfitapp.profile;
+package edu.towson.outfitapp.data;
 
 var firstName : String = ""
 var lastName : String = ""

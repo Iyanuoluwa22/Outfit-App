@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
 import edu.towson.outfitapp.profile.UserProfileScreen
-import edu.towson.outfitapp.signup.SignUpPage
 import edu.towson.outfitapp.login.LoginScreen
 import edu.towson.outfitapp.profile.AccountSettingsScreen
+import edu.towson.outfitapp.signup.SignUpScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(navController)
                     }
                     composable("signUp") {
-                        SignUpPage(navController)
+                        SignUpScreen(navController)
                     }
                     composable("userProfile") {
                         UserProfileScreen(navController)

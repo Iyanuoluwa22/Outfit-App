@@ -1,32 +1,28 @@
 package edu.towson.outfitapp.MainPage
 
-import android.graphics.drawable.Icon
-import android.media.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.data.DummyData
+import edu.towson.outfitapp.data.Post
+import edu.towson.outfitapp.data.User
 
+/*
 @Preview
 @Composable
 fun PagePreview(){
@@ -106,3 +102,4 @@ fun Posted(post: Post, user: User){
     }
 }
 
+*/
