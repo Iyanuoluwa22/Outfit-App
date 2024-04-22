@@ -2,12 +2,17 @@ package edu.towson.outfitapp.profile
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,12 +64,18 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val keyboardController = LocalSoftwareKeyboardController.current
             newUsername?.let {
                 TextField(
                     value = it,
                     onValueChange = { newUsername = it },
                     label = { Text("New Username") },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
             newPassword?.let {
@@ -72,7 +83,12 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     value = it,
                     onValueChange = { newPassword = it },
                     label = { Text("New Password") },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
             newFirstName?.let {
@@ -80,7 +96,12 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     value = it,
                     onValueChange = { newFirstName = it },
                     label = { Text("New First Name") },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
             newLastName?.let {
@@ -88,7 +109,12 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     value = it,
                     onValueChange = { newLastName = it },
                     label = { Text("New Last Name") },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
             Row(

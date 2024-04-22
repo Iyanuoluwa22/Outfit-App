@@ -12,6 +12,7 @@ import edu.towson.outfitapp.profile.AccountSettingsScreen
 import edu.towson.outfitapp.signup.SignUpScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 import edu.towson.outfitapp.viewmodel.UserViewModel
+import edu.towson.outfitapp.MainPage.ForYouPage
 
 class MainActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         AccountSettingsScreen(navController,userViewModel)
                     }
                     composable("userFeed"){
-
+                        ForYouPage(navController,userViewModel)
                     }
                 }
             }

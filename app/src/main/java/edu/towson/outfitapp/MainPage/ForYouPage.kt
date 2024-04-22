@@ -20,18 +20,41 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
 import edu.towson.outfitapp.data.User
+import edu.towson.outfitapp.viewmodel.UserViewModel
 
-@Preview
 @Composable
-fun PagePreview(){
-    val navController = rememberNavController()
-    MainPage(currUserName = "Nu", controller = navController)
+fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
+    // show all of the posts that are not made by the current user.
+    val mainUser by userViewModel.mainUser.collectAsState()
+    val shownPosts = DummyData.Posts.filter { it.PostingUsername != mainUser?.username }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Cyan)
+    ){
+        TopBar(navController)
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .padding(10.dp)
+        ){
+            items(shownPosts) { post ->
+                val user = DummyData.dummyUsers.find{it.username == post.PostingUsername }
+                user?.let {Posted(post, it)}
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -61,37 +84,10 @@ fun TopBar(controller: NavController){
     }
 }
 
-
-@Composable
-fun MainPage (currUserName : String, controller: NavController){ // User ID passed is the user that is currently logged into the system.
-    // show all of the posts that are not made by the current user.
-    val shownPosts = DummyData.Posts.filter { it.PostingUsername != currUserName }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Cyan)
-    ){
-        TopBar(controller)
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .padding(10.dp)
-        ){
-            items(shownPosts) { post ->
-                val user = DummyData.dummyUsers.find{it.username == post.PostingUsername }
-                user?.let {Posted(post, it)}
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-        }
-    }
-
-}
-
 @Composable
 fun Posted(post: Post, user: User){
     Surface(
-      modifier = Modifier.fillMaxWidth(), color = Color.LightGray
+        modifier = Modifier.fillMaxWidth(), color = Color.LightGray
     ){
         Column(
             modifier = Modifier.padding(20.dp)
@@ -104,7 +100,7 @@ fun Posted(post: Post, user: User){
                     text = "@${user.username}",
                     modifier = Modifier.padding(20.dp),
                     style = MaterialTheme.typography.labelSmall,
-                    )
+                )
                 Row{
                     IconButton(
                         onClick = { /*Handle the clicking*/ },
@@ -129,4 +125,15 @@ fun Posted(post: Post, user: User){
 
     }
 }
+
+@Preview
+@Composable
+fun PreviewForYouPageScreen(){
+    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
+    val dummyUserViewModel = UserViewModel().apply {
+        setUser(dummyUser)
+    }
+    ForYouPage(navController = rememberNavController(), dummyUserViewModel)
+}
+
 

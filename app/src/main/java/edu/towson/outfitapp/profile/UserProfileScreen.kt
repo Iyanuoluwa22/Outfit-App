@@ -164,7 +164,7 @@ private fun theBottomBar(navController : NavController){
         }
         Column {
             IconButton(
-                onClick = { navController.navigate("ForYouPage")},
+                onClick = { navController.navigate("userFeed")},
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
             ) {
