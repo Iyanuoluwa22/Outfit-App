@@ -16,18 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
 import edu.towson.outfitapp.data.User
 
-/*
 @Preview
 @Composable
 fun PagePreview(){
     val navController = rememberNavController()
-    MainPage(CurruserId = 3, controller = navController)
+    MainPage(currUserName = "Nu", controller = navController)
 }
 
 @Composable
@@ -59,9 +63,9 @@ fun TopBar(controller: NavController){
 
 
 @Composable
-fun MainPage (CurruserId : Int, controller: NavController){ // User ID passed is the user that is currently logged into the system.
+fun MainPage (currUserName : String, controller: NavController){ // User ID passed is the user that is currently logged into the system.
     // show all of the posts that are not made by the current user.
-    val shownPosts = DummyData.Posts.filter { it.PostingUserId != CurruserId }
+    val shownPosts = DummyData.Posts.filter { it.PostingUsername != currUserName }
 
     Column(
         modifier = Modifier
@@ -75,7 +79,7 @@ fun MainPage (CurruserId : Int, controller: NavController){ // User ID passed is
                 .padding(10.dp)
         ){
             items(shownPosts) { post ->
-                val user = DummyData.Users.find{it.UserId == post.PostingUserId }
+                val user = DummyData.dummyUsers.find{it.username == post.PostingUsername }
                 user?.let {Posted(post, it)}
                 Spacer(modifier = Modifier.height(10.dp))
             }
@@ -89,17 +93,40 @@ fun Posted(post: Post, user: User){
     Surface(
       modifier = Modifier.fillMaxWidth(), color = Color.LightGray
     ){
-        Text(
-            text = "@${user.UserName}",
-            modifier = Modifier.padding(20.dp),
-            style = MaterialTheme.typography.labelSmall,
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Text(
+                    text = "@${user.username}",
+                    modifier = Modifier.padding(20.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    )
+                Row{
+                    IconButton(
+                        onClick = { /*Handle the clicking*/ },
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(Icons.Default.FavoriteBorder, contentDescription = "Like")
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
+                    IconButton(
+                        onClick = { /*Handle the clicking*/ },
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(Icons.Default.AddCircle, contentDescription = "Comment")
+                    }
+                }
+            }
+            Text(
+                text = post.userCaption,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
-        )
-        Text(
-            text = post.Caption,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }
 
-*/
