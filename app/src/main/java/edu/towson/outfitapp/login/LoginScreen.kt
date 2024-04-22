@@ -107,8 +107,7 @@ fun LoginScreen(navController: NavController) {
                     val validPassword = isValidPassword(password)
                     if (!validUsername || !validPassword) {
                         showDialog = true
-                    }
-                    if(userExists(userName)){
+                    } else if(userExists(userName)){
                         val user = getUser(userName)
                         if (user != null) {
                             if(user.password == password){

@@ -112,7 +112,7 @@ fun SignUpScreen(navController: NavController) {
         )
         TextField(
             value = email,
-            onValueChange = { email = it.lowercase(Locale.getDefault()) },
+            onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.padding(10.dp),
             leadingIcon = {

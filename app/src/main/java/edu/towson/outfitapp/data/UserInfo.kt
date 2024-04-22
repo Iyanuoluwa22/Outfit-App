@@ -35,26 +35,10 @@ fun isValidPassword(passwordInput : String) : Boolean {
 }
 
 fun isValidEmail(emailInput: String): Boolean {
-        val emailMust = "@|.com|.org|.edu|.net|.int|.gov".toRegex()
-        var atCount = 0 // Counter for '@' symbols
-        for ((numChar, index) in emailInput.indices.withIndex()) {
-                val char = emailInput[index]
-                if (char == '@') {
-                        atCount++
-                        if (atCount > 1) {
-                                return false // More than one '@' symbol found
-                        }
-                        if (numChar == 0) {
-                                return false // '@' symbol found at the beginning
-                        }
-                        // Check if the next character is a period
-                        if (index < emailInput.length - 1 && emailInput[index + 1] == '.') {
-                                return false // '@' symbol followed by a period
-                        }
-                }
-        }
-        return emailInput.matches(emailMust)
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
+        return emailInput.matches(emailRegex)
 }
+
 
 fun getTheUsername(): String {
         return username

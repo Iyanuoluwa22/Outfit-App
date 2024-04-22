@@ -1,10 +1,10 @@
 package edu.towson.outfitapp.data
 
 
-    private var allUsers : MutableList<User> = mutableListOf()
+    private var allUsers : MutableList<User> = mutableListOf(User("test","1234","Test","Run","testrun@gmail.com"))
 
     fun userExists(username : String): Boolean{
-        for (user in allUsers!!) {
+        for (user in allUsers) {
             if (user.username.equals(username)) return true
         }
         return false
@@ -25,8 +25,4 @@ package edu.towson.outfitapp.data
         for (user in allUsers){
             if(user.email.equals(email)) allUsers.remove(user)
         }
-    }
-
-    fun deleteAllUsers(){
-        allUsers.clear()
     }
