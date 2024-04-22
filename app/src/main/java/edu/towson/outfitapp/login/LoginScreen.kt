@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.*
@@ -31,6 +32,7 @@ import edu.towson.outfitapp.viewmodel.UserViewModel
 import java.util.Locale
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var userName by remember { mutableStateOf("") }
