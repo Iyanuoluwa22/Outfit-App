@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel : ViewModel() {
+class UserViewModelF : ViewModel() {
     private val _mainUser = MutableStateFlow<User?>(null)
     var mainUser: StateFlow<User?> = _mainUser
 

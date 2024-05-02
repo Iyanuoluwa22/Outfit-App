@@ -18,13 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.data.User
-import edu.towson.outfitapp.viewmodel.UserViewModel
+import edu.towson.outfitapp.viewmodel.UserViewModelF
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
-    val mainUser by userViewModel.mainUser.collectAsState()
+fun UserProfileScreen(navController: NavController, userViewModelF: UserViewModelF) {
+    val mainUser by userViewModelF.mainUser.collectAsState()
     Scaffold(topBar = {
         TopAppBar(
             modifier = Modifier.heightIn(10.dp,200.dp),
@@ -215,8 +215,8 @@ fun userBio(){
 @Composable
 fun PreviewUserProfileScreen() {
     val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModel = UserViewModel().apply {
+    val dummyUserViewModelF = UserViewModelF().apply {
         setUser(dummyUser)
     }
-    UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
+    UserProfileScreen(navController = rememberNavController(), userViewModelF = dummyUserViewModelF)
 }

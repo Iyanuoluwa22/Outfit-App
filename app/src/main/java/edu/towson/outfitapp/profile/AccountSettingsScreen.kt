@@ -22,13 +22,13 @@ import edu.towson.outfitapp.data.User
 import edu.towson.outfitapp.data.changeUsername
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
-import edu.towson.outfitapp.viewmodel.UserViewModel
+import edu.towson.outfitapp.viewmodel.UserViewModelF
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewModel) {
-    val mainUser by userViewModel.mainUser.collectAsState()
+fun AccountSettingsScreen(navController: NavController, userViewModelF: UserViewModelF) {
+    val mainUser by userViewModelF.mainUser.collectAsState()
     var newUsername by remember { mutableStateOf(mainUser?.username) }
     var newPassword by remember { mutableStateOf(mainUser?.password) }
     var newFirstName by remember { mutableStateOf(mainUser?.firstName) }
@@ -174,8 +174,8 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
 @Composable
 fun PreviewAccountSettingsScreen() {
     val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModel = UserViewModel().apply {
+    val dummyUserViewModelF = UserViewModelF().apply {
         setUser(dummyUser)
     }
-    AccountSettingsScreen(navController = rememberNavController(), dummyUserViewModel)
+    AccountSettingsScreen(navController = rememberNavController(), dummyUserViewModelF)
 }
