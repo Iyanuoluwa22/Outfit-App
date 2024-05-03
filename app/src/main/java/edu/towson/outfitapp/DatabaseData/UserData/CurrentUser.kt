@@ -1,10 +1,9 @@
 package edu.towson.outfitapp.DatabaseData.UserData
 
 data class CurrentUser (
-    val id: Int,
+    val userEmail: String,
     val userName:String,
     val firstName: String,
     val lastName: String,
-    val age: Int,
     val password: String
 )

@@ -45,7 +45,7 @@ fun signUpPage(userViewModel: UserViewModel) {
         var userName by remember { mutableStateOf("") }
         var firstName by remember { mutableStateOf("") }
         var lastName by remember { mutableStateOf("") }
-        var age by remember { mutableStateOf("") }
+        var userEmail by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var showDialog by remember { mutableStateOf(false ) }
 
@@ -91,9 +91,9 @@ fun signUpPage(userViewModel: UserViewModel) {
             )
         )
         TextField(
-            value = age,
-            onValueChange = { age = it },
-            label = { Text(text = "Age", fontSize = 15.sp) },
+            value = userEmail,
+            onValueChange = { userEmail = it },
+            label = { Text(text = "Email", fontSize = 15.sp) },
             modifier = Modifier.padding(10.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.LightGray,
@@ -115,7 +115,7 @@ fun signUpPage(userViewModel: UserViewModel) {
             )
         )
         Row(modifier = Modifier.padding(20.dp)){
-            Button(onClick = { /*TODO*/ },
+            Button(onClick = { /*TODO*/ }, // !!!!!!!!!!!!!!!!!!!!!! ! ! !   /*TODO("navigate")*/   NUUUUU, please make this button navigate to the login page plzzzz
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue))
             {
                 Text(text = "Login")
@@ -125,20 +125,22 @@ fun signUpPage(userViewModel: UserViewModel) {
             Button(
                 onClick = {
                     // Ensure all fields are filled
-                    if (firstName.isNotEmpty() && lastName.isNotEmpty() && age.isNotEmpty() && userName.isNotEmpty() && password.isNotEmpty() ) {
+                    if (firstName.isNotEmpty() && lastName.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty() && password.isNotEmpty() ) {
                         // Create a new user object
-                        val user = User(0, userName, firstName, lastName, age.toInt(), password)
+                        val user = User(userEmail, userName, firstName, lastName, password)
                         // Add user to database
                         userViewModel.addUser(user)
                         val tempCurrentUser = userViewModel.getUserByUsername(userName)
 
 
-                        val currentUser = tempCurrentUser.value?.let { CurrentUser(it.id, userName, firstName, lastName, age.toInt(), password ) } // this will be passed around so we know who the current user is
+                        val currentUser = tempCurrentUser.value?.let { CurrentUser( it.userEmail, it.userName, it.firstName, it.lastName, it.password) } // this will be passed around so we know who the current user is
+                        /// !!!!VERY IMPORTANT TO PASS AROUND CURRENT USER  DURING NAVIGATION EVERY PAGE SHOULD ACCEPT A CURRENT USER PARAMETER
+
 
                         // Clear input fields
                         firstName = ""
                         lastName = ""
-                        age = ""
+                        userEmail = ""
                         password = ""
                         userName = " "
                     } else {
@@ -160,13 +162,14 @@ fun signUpPage(userViewModel: UserViewModel) {
         }
 
         // LazyColumn to display users
-        // Must delete later
+        // Must delete later just for test
+        /*TODO("delete later ")*/
         LazyColumn(
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             items(users) { user ->
                 Text(
-                    text = "${user.firstName} ${user.lastName} (${user.age} years old) ${user.id}",
+                    text = "${user.firstName} ${user.lastName} ${user.userEmail}  ${user.userName}",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(8.dp)
                 )

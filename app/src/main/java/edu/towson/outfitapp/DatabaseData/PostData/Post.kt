@@ -10,17 +10,18 @@ import edu.towson.outfitapp.DatabaseData.UserData.User
     tableName = "userPosts",
     foreignKeys = [ForeignKey(
         entity = User::class,
-        parentColumns = ["id"],
-        childColumns = ["userID"], // Corrected to match the property name in the Post entity
+        parentColumns = ["userEmail"],
+        childColumns = ["userEmail"], // Corrected to match the property name in the Post entity
         onDelete = ForeignKey.CASCADE // Specify the onDelete action if needed
     )]
 )
 data class Post (
-    val userID: Int, // foreign key
+    val userEmail: String, // foreign key
     val postUrl: String,
     val postDate: String?,
     var postCaption: String?,
     var postLikeNum: Int = 0,
+    val totalCost: Int 
 
 
     ){

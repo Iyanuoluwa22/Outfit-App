@@ -46,9 +46,9 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun getCurrentUserPosts(id: Int){
+    fun getCurrentUserPosts(email: String){
         viewModelScope.launch {
-            postDao.getPostsByUserId(id)
+            postDao.getPostsByUserEmail(email)
         }
     }
 
