@@ -29,6 +29,10 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
 
+
+
+
+
 /*
 @Composable
 fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
@@ -48,14 +52,19 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
                 .padding(10.dp)
         ){
             items(shownPosts) { post ->
-                val user = DummyData.dummyUsers.find{it.username == post.PostingUsername }
+                val user = DummyData.dummyUsers.find{it.Username == post.PostingUsername }
                 user?.let {Posted(post, it)}
                 Spacer(modifier = Modifier.height(10.dp))
+                mainUser.
             }
         }
     }
 
 }
+
+// post DOA is needed to get the posts.
+
+
 
 @Composable
 fun TopBar(controller: NavController){
@@ -135,5 +144,4 @@ fun PreviewForYouPageScreen(){
     }
     ForYouPage(navController = rememberNavController(), dummyUserViewModelF)
 }
-
-*/
+        */
