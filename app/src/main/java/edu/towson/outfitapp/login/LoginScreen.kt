@@ -106,6 +106,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             // Login Button
             Button(
                 onClick = {
+                    // new var
+                    val user = userViewModel.loginCheck(userName, password)
                     val validUsername = isValidUsername(userName)
                     val validPassword = isValidPassword(password)
                     if (!validUsername || !validPassword) {
