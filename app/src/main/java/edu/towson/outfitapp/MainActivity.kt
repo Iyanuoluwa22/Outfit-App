@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(navController,userViewModel)
                     }
                     composable("signUp") {
-                        signUpPage(navController, userViewModel = userViewModel)
+                        signUpPage(navController, userViewModel = userViewModel, lifecycleScope)
                     }
                     composable("userProfile") {
                         UserProfileScreen(navController,userViewModel)

@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -29,9 +30,6 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
 import java.util.Locale
-
-import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -110,19 +108,12 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 onClick = {
                     val validUsername = isValidUsername(userName)
                     val validPassword = isValidPassword(password)
-                    val userDao = userViewModel.userDao
                     if (!validUsername || !validPassword) {
                         showDialog = true
                     } else{
-                        val check = userViewModel.userExists(userName,password)
-                        if(check.value == true){
-                            val user = userDao.getUserByUsername(userName)
-                            userViewModel.setCurrentUser(user)
-                            navController.navigate("userProfile")
-                        }else{
-                            accountNotFoundDialog = true
-                        }
-
+                        val userLive = userViewModel.loginCheck(userName,password)
+                        userViewModel.setCurrentUser(userLive)
+                        navController.navigate("userProfile")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),

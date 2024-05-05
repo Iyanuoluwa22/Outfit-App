@@ -23,9 +23,11 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.isValidEmail
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun signUpPage(navController: NavController, userViewModel: UserViewModel) {
+fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
     val users by userViewModel.getAllUsers().observeAsState(initial = emptyList())
 
     var userName by remember { mutableStateOf("") }
@@ -34,6 +36,7 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel) {
     var userEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    var accountExistDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -119,19 +122,16 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel) {
                     if (firstName.isNotEmpty() && lastName.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty() && password.isNotEmpty()) {
                         // Check for valid email, username, and password
                         if (isValidEmail(userEmail) && isValidUsername(userName) && isValidPassword(password)) {
-                            val user = User(userEmail, userName, firstName, lastName, password)
-                            val userLiveData = MutableLiveData<User>()
-                            userLiveData.value = user
 
-                            userViewModel.addUser(userLiveData.value!!) // Adding the user to ViewModel
-                            userViewModel.setCurrentUser(userLiveData) // Setting the LiveData<User> as the current user
-
-                            // Clear input fields
-                            firstName = ""
-                            lastName = ""
-                            userEmail = ""
-                            password = ""
-                            userName = " "
+                            if(userViewModel.userDao.getUserByUsername(userName).value == null){
+                                val user = User(userEmail,userName,firstName,lastName, password)
+                                userViewModel.addUser(user)
+                                val userLive = userViewModel.getUserByUsername(user.userName)
+                                userViewModel.setCurrentUser(userLive)
+                                navController.navigate("userProfile")
+                            } else {
+                                accountExistDialog = true
+                            }
                         } else {
                             showDialog = true // Set the flag to show the dialog
                         }
@@ -143,6 +143,7 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel) {
             ) {
                 Text(text = "Create Account")
             }
+
         }
 
         // Show dialog if flag is true
@@ -168,9 +169,23 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel) {
                     }
                 }
             )
+        } else if(accountExistDialog){
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text(text = "Account Exists Already") },
+                confirmButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(Color.Blue)
+                    ) {
+                        Text(text = "OK")
+                    }
+                }
+            )
         }
     }
 }
+
 
 @Preview
 @Composable
@@ -182,5 +197,5 @@ fun PreviewSignUpPage(){
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    signUpPage(rememberNavController(), dummyUserViewModel)
+    signUpPage(rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
 }
