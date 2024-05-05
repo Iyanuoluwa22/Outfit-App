@@ -1,5 +1,7 @@
 package edu.towson.outfitapp.data
 
+import edu.towson.outfitapp.DatabaseData.UserData.User
+
 // classes of data that we are going to use to show user info before we have the database ...
 
 

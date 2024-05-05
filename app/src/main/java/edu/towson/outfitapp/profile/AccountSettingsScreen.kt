@@ -1,11 +1,13 @@
 package edu.towson.outfitapp.profile
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,18 +20,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.towson.outfitapp.data.User
-import edu.towson.outfitapp.data.changeUsername
-import edu.towson.outfitapp.data.isValidPassword
-import edu.towson.outfitapp.data.isValidUsername
-import edu.towson.outfitapp.viewmodel.UserViewModelF
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.data.*
+import androidx.lifecycle.*
+import edu.towson.outfitapp.DatabaseData.UserData.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountSettingsScreen(navController: NavController, userViewModelF: UserViewModelF) {
-    val mainUser by userViewModelF.mainUser.collectAsState()
-    var newUsername by remember { mutableStateOf(mainUser?.username) }
+fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
+    val mainUser by userViewModel.mainUser.observeAsState()
+    var newUsername by remember { mutableStateOf(mainUser?.userName) }
     var newPassword by remember { mutableStateOf(mainUser?.password) }
     var newFirstName by remember { mutableStateOf(mainUser?.firstName) }
     var newLastName by remember { mutableStateOf(mainUser?.lastName) }
@@ -65,6 +68,7 @@ fun AccountSettingsScreen(navController: NavController, userViewModelF: UserView
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val keyboardController = LocalSoftwareKeyboardController.current
+            val userDao = userViewModel.userDao
             newUsername?.let {
                 TextField(
                     value = it,
@@ -127,14 +131,21 @@ fun AccountSettingsScreen(navController: NavController, userViewModelF: UserView
                         if (!validUsername!! || !validPassword!!) {
                             showErrorPopup = true // Show popup if username or password is invalid
                         } else {
-                            newUsername?.let { mainUser?.username?.let { it1 -> changeUsername(it1, it) } } // change to (oldUsername, newUsername)
-                            navController.popBackStack()
+                            viewModelScope.launch{
+                                newUsername?.let {
+                                    mainUser?.userName?.let { oldUsername ->
+                                        userDao.changeUsername(oldUsername, it)
+                                    }
+                                }
+                                navController.popBackStack()
+                            }
                         }
                     },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Save Changes")
                 }
+
                 Spacer(modifier = Modifier.width(10.dp))
                 Button(
                     onClick = {
@@ -173,9 +184,12 @@ fun AccountSettingsScreen(navController: NavController, userViewModelF: UserView
 @Preview
 @Composable
 fun PreviewAccountSettingsScreen() {
-    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModelF = UserViewModelF().apply {
-        setUser(dummyUser)
-    }
-    AccountSettingsScreen(navController = rememberNavController(), dummyUserViewModelF)
+    val dummyUser = User("test@gmail.com", "test", "gang", "gang", "gang")
+    val userLiveData = MutableLiveData<User>()
+    userLiveData.value = dummyUser
+    val applicationContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val application = applicationContext as Application // Cast the context to an Application
+    val dummyUserViewModel = UserViewModel(application)
+    dummyUserViewModel.setCurrentUser(userLiveData)
+    AccountSettingsScreen(navController = rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
 }

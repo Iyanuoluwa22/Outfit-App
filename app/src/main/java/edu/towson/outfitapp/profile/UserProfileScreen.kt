@@ -2,6 +2,7 @@ package edu.towson.outfitapp.profile
 
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -9,22 +10,24 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.towson.outfitapp.data.User
-import edu.towson.outfitapp.viewmodel.UserViewModelF
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.DatabaseData.UserData.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserProfileScreen(navController: NavController, userViewModelF: UserViewModelF) {
-    val mainUser by userViewModelF.mainUser.collectAsState()
+fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
+    val mainUser by userViewModel.mainUser.observeAsState()
     Scaffold(topBar = {
         TopAppBar(
             modifier = Modifier.heightIn(10.dp,200.dp),
@@ -88,7 +91,9 @@ fun UserProfileScreen(navController: NavController, userViewModelF: UserViewMode
                 mainUser?.let { FollowingCount(it) }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)) {
                 userBio()
             }
 
@@ -111,20 +116,20 @@ fun ProfilePicture() {
 
 @Composable
 fun Username(mainUser: User) {
-    Text(text = mainUser.username, color = Color.Black,
-        fontFamily = FontFamily.Monospace) // change text back to accepted username
+    Text(text = mainUser.userName, color = Color.Black,
+        fontFamily = FontFamily.Monospace)
 }
 
 @Composable
 fun FollowersCount(mainUser: User) {
-    Text("Followers: ${mainUser.getFollowers().size}", color = Color.Black,
+    Text("Followers: 0", color = Color.Black,
         fontFamily = FontFamily.Monospace
     )
 }
 
 @Composable
 fun FollowingCount(mainUser: User) {
-    Text("Following: ${mainUser.getFollowing().size}", color = Color.Black,
+    Text("Following: 0", color = Color.Black,
         fontFamily = FontFamily.Monospace
     )
 }
@@ -214,9 +219,12 @@ fun userBio(){
 @Preview
 @Composable
 fun PreviewUserProfileScreen() {
-    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModelF = UserViewModelF().apply {
-        setUser(dummyUser)
-    }
-    UserProfileScreen(navController = rememberNavController(), userViewModelF = dummyUserViewModelF)
+    val dummyUser = User("test@gmail.com", "test", "gang", "gang", "gang")
+    val userLiveData = MutableLiveData<User>()
+    userLiveData.value = dummyUser
+    val applicationContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val application = applicationContext as Application // Cast the context to an Application
+    val dummyUserViewModel = UserViewModel(application)
+    dummyUserViewModel.setCurrentUser(userLiveData)
+    UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
 }

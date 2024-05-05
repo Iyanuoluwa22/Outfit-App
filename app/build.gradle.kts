@@ -4,7 +4,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-android")
-    id("kotlin-kapt")
+    //id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 
 }
 
@@ -56,9 +57,10 @@ android {
 }
 
 dependencies {
+    implementation("androidx.room:room-common:2.6.1")
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
@@ -78,18 +80,20 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
 
     // manual adds
-    implementation("androidx.compose.material:material-icons-core:1.6.6")
-    implementation("androidx.compose.material:material-icons-extended:1.6.6")
+    implementation("androidx.compose.material:material-icons-core:1.6.7")
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
 
     // Room components
     val room_version = "2.6.1"
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
 
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
     // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
+//    kapt("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
 
 
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -100,8 +104,8 @@ dependencies {
 
     // Kotlin components
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10")
-    api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // coil components
     implementation("io.coil-kt:coil-compose:2.6.0")

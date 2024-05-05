@@ -22,18 +22,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
-import edu.towson.outfitapp.data.User
-import edu.towson.outfitapp.viewmodel.UserViewModelF
 
+/*
 @Composable
-fun ForYouPage(navController: NavController, userViewModelF: UserViewModelF){
+fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
     // show all of the posts that are not made by the current user.
-    val mainUser by userViewModelF.mainUser.collectAsState()
-    val shownPosts = DummyData.Posts.filter { it.PostingUsername != mainUser?.username }
+    val mainUser by userViewModel.mainUser.observeAsState()
+    val shownPosts = DummyData.Posts.filter { it.PostingUsername != mainUser?.userName }
 
     Column(
         modifier = Modifier
@@ -135,4 +136,4 @@ fun PreviewForYouPageScreen(){
     ForYouPage(navController = rememberNavController(), dummyUserViewModelF)
 }
 
-
+*/

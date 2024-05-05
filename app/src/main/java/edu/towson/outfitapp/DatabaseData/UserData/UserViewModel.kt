@@ -3,13 +3,16 @@ package edu.towson.outfitapp.DatabaseData.UserData
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userDao: UserDao
+    val userDao: UserDao
     private val allUsers: LiveData<List<User>>
+    private val _mainUser = MutableLiveData<User?>(null)
+    val mainUser: LiveData<User?> = _mainUser
 
     init {
         val database = UserDatabase.getDatabase(application)
@@ -18,7 +21,17 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getAllUsers(): LiveData<List<User>> {
-        return userDao.readAllData()
+        return allUsers
+    }
+
+    fun setCurrentUser(userLiveData: LiveData<User?>) {
+        viewModelScope.launch {
+            // Observe the LiveData and get the value when it changes
+            userLiveData.observeForever { user ->
+                // Update the value of _mainUser with the observed user value
+                _mainUser.postValue(user)
+            }
+        }
     }
 
     fun addUser(user: User) {
@@ -33,7 +46,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteAllUsers() { // Please don't use this unless you have too
+    fun deleteAllUsers() { // Please don't use this unless you have to
         viewModelScope.launch {
             userDao.deleteAllUsers()
         }
@@ -46,4 +59,19 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun loginCheck(userName: String, password: String): LiveData<User?> {
         return userDao.login(userName, password)
     }
+
+    fun userExists(userName: String, password: String): LiveData<Boolean> {
+        val userLiveData = getUserByUsername(userName)
+        val userExistsLiveData = MutableLiveData<Boolean>()
+
+        userLiveData.observeForever { user ->
+            if ((user != null) && (user.password == password)) {
+                userExistsLiveData.postValue(true)
+            } else {
+                userExistsLiveData.postValue(false)
+            }
+        }
+        return userExistsLiveData
+    }
+
 }

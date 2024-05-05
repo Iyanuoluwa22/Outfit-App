@@ -1,5 +1,6 @@
 package edu.towson.outfitapp.login
 
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.*
@@ -20,20 +21,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.towson.outfitapp.data.User
-import edu.towson.outfitapp.data.getUser
+import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
-import edu.towson.outfitapp.data.userExists
-import edu.towson.outfitapp.viewmodel.UserViewModelF
 import java.util.Locale
 
+import androidx.compose.runtime.*
+import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(navController: NavController, userViewModelF: UserViewModelF) {
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -108,21 +110,19 @@ fun LoginScreen(navController: NavController, userViewModelF: UserViewModelF) {
                 onClick = {
                     val validUsername = isValidUsername(userName)
                     val validPassword = isValidPassword(password)
+                    val userDao = userViewModel.userDao
                     if (!validUsername || !validPassword) {
                         showDialog = true
-                    } else if(userExists(userName)){
-                        val user = getUser(userName)
-                        if (user != null) {
-                            if(user.password == password){
-                                userViewModelF.setUser(user)
-                                navController.popBackStack()
-                                navController.navigate("userProfile")
-                            }else{
-                                wrongPasswordDialog = true
-                            }
+                    } else{
+                        val check = userViewModel.userExists(userName,password)
+                        if(check.value == true){
+                            val user = userDao.getUserByUsername(userName)
+                            userViewModel.setCurrentUser(user)
+                            navController.navigate("userProfile")
+                        }else{
+                            accountNotFoundDialog = true
                         }
-                    }else{
-                        accountNotFoundDialog = true
+
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
@@ -147,6 +147,9 @@ fun LoginScreen(navController: NavController, userViewModelF: UserViewModelF) {
         }
     }
 }
+
+
+
 
 @Composable
 fun ShowAlertDialog(onDismiss: () -> Unit) {
@@ -200,9 +203,8 @@ fun ShowAccountDialog(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         title = { Text("Account Not Found") },
         text = { Column {
-            Text("Account with this username does not exist")
+            Text("Wrong Password or Account Does not Exist")
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = "Username: Letters, Numbers, Special Characters(_ and !) *No Spaces*")
         }
         },
         confirmButton = {
@@ -220,9 +222,13 @@ fun ShowAccountDialog(onDismiss: () -> Unit) {
 @Preview
 @Composable
 fun PreviewLoginScreen() {
-    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModelF = UserViewModelF().apply {
-        setUser(dummyUser)
-    }
-    LoginScreen(navController = rememberNavController(),dummyUserViewModelF)
+    val dummyUser = User("test@gmail.com", "test", "gang", "gang", "gang")
+    val userLiveData = MutableLiveData<User>()
+    userLiveData.value = dummyUser
+    val applicationContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val application = applicationContext as Application // Cast the context to an Application
+    val dummyUserViewModel = UserViewModel(application)
+    dummyUserViewModel.setCurrentUser(userLiveData)
+    LoginScreen(navController = rememberNavController(), dummyUserViewModel)
 }
+

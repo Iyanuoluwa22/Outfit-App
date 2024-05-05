@@ -15,7 +15,6 @@ interface UserDao {
     @Query("SELECT * FROM users ORDER BY userEmail ASC ")  // Gets all users
     fun readAllData(): LiveData<List<User>>
 
-
     @Delete
     suspend fun deleteUser(user: User) // How to delete a user
 
@@ -28,7 +27,15 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE userName = :username AND password = :password")
     fun login(username: String, password: String): LiveData<User?> // This will be used to do login verification
 
+    @Query("UPDATE users SET userName = :newUsername WHERE userName = :currentUsername")
+    suspend fun changeUsername(currentUsername: String, newUsername: String)
+    @Query("UPDATE users SET password = :newPassword WHERE userName = :username")
+    suspend fun changePassword(username: String, newPassword: String)
 
+    @Query("UPDATE users SET firstName = :newFirstName WHERE userName = :username")
+    suspend fun changeFirstName(username: String, newFirstName: String)
 
+    @Query("UPDATE users SET lastName = :newLastName WHERE userName = :username")
+    suspend fun changeLastName(username: String, newLastName: String)
 
 }
