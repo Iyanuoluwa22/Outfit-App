@@ -64,7 +64,7 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
-               theBottomBar(navController)
+               TheBottomBar(navController)
             }
         }) {innerPadding ->
         Column(
@@ -91,13 +91,7 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
                 mainUser?.let { FollowingCount(it) }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)) {
-                userBio()
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -135,9 +129,9 @@ fun FollowingCount(mainUser: User) {
 }
 
 @Composable
-fun UploadPhotoButton() {
+fun UploadPhotoButton(navController: NavController) {
     IconButton(
-        onClick = {},
+        onClick = {navController.navigate("imageUpload")},
         modifier = Modifier
             .padding(horizontal = 16.dp)
     ) {
@@ -150,7 +144,7 @@ fun UploadPhotoButton() {
 }
 
 @Composable
-private fun theBottomBar(navController : NavController){
+private fun TheBottomBar(navController : NavController){
     Row(modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly){
@@ -181,7 +175,7 @@ private fun theBottomBar(navController : NavController){
             }
         }
         Column {
-            UploadPhotoButton()
+            UploadPhotoButton(navController)
         }
         Column {
             IconButton(onClick = { /*TODO*/ }) {
@@ -208,11 +202,6 @@ private fun theBottomBar(navController : NavController){
             }
         }
     }
-}
-
-@Composable
-fun userBio(){
-    Text(text = "")
 }
 
 

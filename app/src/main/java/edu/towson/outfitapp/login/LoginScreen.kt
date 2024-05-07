@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.input.ImeAction
@@ -104,6 +105,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Login Button
+            val context = LocalContext.current
             Button(
                 onClick = {
                     // new var
@@ -114,8 +116,15 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         showDialog = true
                     } else{
                         val userLive = userViewModel.loginCheck(userName,password)
-                        userViewModel.setCurrentUser(userLive)
-                        navController.navigate("userProfile")
+                        userLive.observeForever { user ->
+                            if (user != null) {
+                                userViewModel.setCurrentUser(userLive)
+                                navController.navigate("userProfile")
+                            } else {
+                                accountNotFoundDialog = true
+                            }
+                        }
+
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),

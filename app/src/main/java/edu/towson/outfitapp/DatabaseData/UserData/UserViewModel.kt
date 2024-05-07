@@ -60,18 +60,5 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return userDao.login(userName, password)
     }
 
-    fun userExists(userName: String, password: String): LiveData<Boolean> {
-        val userLiveData = getUserByUsername(userName)
-        val userExistsLiveData = MutableLiveData<Boolean>()
-
-        userLiveData.observeForever { user ->
-            if ((user != null) && (user.password == password)) {
-                userExistsLiveData.postValue(true)
-            } else {
-                userExistsLiveData.postValue(false)
-            }
-        }
-        return userExistsLiveData
-    }
 
 }
