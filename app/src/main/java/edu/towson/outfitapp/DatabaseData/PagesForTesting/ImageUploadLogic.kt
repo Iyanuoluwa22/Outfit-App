@@ -1,5 +1,6 @@
 package edu.towson.outfitapp.DatabaseData.PagesForTesting
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,7 +45,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
-
+    val context = LocalContext.current
 
     val result = remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
@@ -120,6 +122,8 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
 
                           // Gotta handle toInt problem
                             // logic to handle adding a new post
+                            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            context.contentResolver.takePersistableUriPermission(image, flag)
 
                             val post = Post(
                                 "christianbastien020@gmail.com",
