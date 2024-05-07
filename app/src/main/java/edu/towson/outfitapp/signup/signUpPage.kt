@@ -2,14 +2,19 @@ package edu.towson.outfitapp.signup
 
 import android.app.Application
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.PagesForTesting.MyDialog
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import edu.towson.outfitapp.data.isValidEmail
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
@@ -27,7 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
+fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
     val users by userViewModel.getAllUsers().observeAsState(initial = emptyList())
 
     var userName by remember { mutableStateOf("") }
@@ -37,6 +43,10 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var accountExistDialog by remember { mutableStateOf(false) }
+    var showProgress by remember { mutableStateOf(false) }
+    var showProgressBack by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -52,14 +62,19 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
         )
         TextField(
             value = userName,
-            onValueChange = { userName = it },
+            onValueChange = { userName = it.lowercase() },
             label = { Text("User name") },
             modifier = Modifier.padding(15.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
         TextField(
             value = firstName,
@@ -70,7 +85,12 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
         TextField(
             value = lastName,
@@ -81,7 +101,12 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
         TextField(
             value = userEmail,
@@ -92,7 +117,12 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
 
         TextField(
@@ -105,11 +135,16 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
         )
 
         Row(modifier = Modifier.padding(20.dp)){
-            Button(onClick = { navController.popBackStack()},
+            Button(onClick = { showProgressBack = true},
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue))
             {
                 Text(text = "<")
@@ -128,7 +163,7 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                                 userViewModel.addUser(user)
                                 val userLive = userViewModel.getUserByUsername(user.userName)
                                 userViewModel.setCurrentUser(userLive)
-                                navController.navigate("userProfile")
+                                showProgress = true
                             } else {
                                 accountExistDialog = true
                             }
@@ -173,6 +208,7 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = { Text(text = "Account Exists Already") },
+                text = {Text("Account with username or email already exists")},
                 confirmButton = {
                     Button(
                         onClick = { showDialog = false },
@@ -182,6 +218,10 @@ fun signUpPage(navController: NavController, userViewModel: UserViewModel, viewM
                     }
                 }
             )
+        } else if (showProgress){
+            ShowProgressIndicator(navController, "userProfile")
+        } else if (showProgressBack){
+            ShowProgressIndicator(navController, "", true)
         }
     }
 }
@@ -197,5 +237,5 @@ fun PreviewSignUpPage(){
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    signUpPage(rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
+    SignUpPage(rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
 }

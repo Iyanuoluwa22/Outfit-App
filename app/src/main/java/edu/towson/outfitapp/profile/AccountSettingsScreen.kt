@@ -24,6 +24,7 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.*
 import androidx.lifecycle.*
 import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -37,6 +38,9 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
     var newFirstName by remember { mutableStateOf(mainUser?.firstName) }
     var newLastName by remember { mutableStateOf(mainUser?.lastName) }
     var showErrorPopup by remember { mutableStateOf(false) } // State for showing error popup
+    var showDeleteConfirmation by remember { mutableStateOf(false) } // State for showing delete confirmation
+    var showProgress by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
@@ -121,44 +125,61 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
-            Row(
-                modifier = Modifier.padding(10.dp)
-            ) {
-                Button(
-                    onClick = {
-                        val validUsername = newUsername?.let { isValidUsername(it) }
-                        val validPassword = newPassword?.let { isValidPassword(it) }
-                        if (!validUsername!! || !validPassword!!) {
-                            showErrorPopup = true // Show popup if username or password is invalid
-                        } else {
-                            viewModelScope.launch{
-                                newUsername?.let {
-                                    mainUser?.userName?.let { oldUsername ->
-                                        userDao.changeUsername(oldUsername, it)
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            val validUsername = newUsername?.let { isValidUsername(it) }
+                            val validPassword = newPassword?.let { isValidPassword(it) }
+                            if (!validUsername!! || !validPassword!!) {
+                                showErrorPopup = true // Show popup if username or password is invalid
+                            } else {
+                                viewModelScope.launch{
+                                    newUsername?.let {
+                                        mainUser?.userName?.let { oldUsername ->
+                                            userDao.changeUsername(oldUsername, it)
+                                        }
                                     }
+                                    showProgress = true
+                                    //navController.popBackStack()
                                 }
-                                navController.popBackStack()
                             }
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Save Changes")
+                        },
+                        modifier = Modifier.wrapContentWidth()
+                    ) {
+                        Text("Save Changes")
+                    }
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("login") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        },
+                        modifier = Modifier.wrapContentWidth()
+                    ) {
+                        Text("Log Out")
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
                 }
 
-                Spacer(modifier = Modifier.width(10.dp))
-                Button(
-                    onClick = {
-                        navController.navigate("login") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Log Out")
+                Row(modifier = Modifier.padding(15.dp)){
+                    Button(
+                        onClick = {
+                            showDeleteConfirmation = true
+                        },
+                        modifier = Modifier.wrapContentWidth()
+                    ) {
+                        Text("Delete Account")
+                    }
                 }
 
-            }
+
+
         }
     }
 
@@ -178,6 +199,37 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                 }
             }
         )
+    }else if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = {
+                Text(text = "Delete Account?")
+            },
+            text = {
+                Text(text = "Are you sure you want to delete your account?")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        mainUser?.let { userViewModel.deleteUser(it) }
+                        navController.navigate("login") {
+                                popUpTo("login") { inclusive = true }
+                        }
+                    }
+                ) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDeleteConfirmation = false }
+                ) {
+                    Text("No")
+                }
+            }
+        )
+    } else if (showProgress){
+        ShowProgressIndicator(navController, "",true )
     }
 }
 

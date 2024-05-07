@@ -99,51 +99,6 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
 }
 
 @Composable
-fun ProfilePicture() {
-    // Replace with image resource
-    Icon(
-        imageVector = Icons.Default.Person,
-        contentDescription = "Profile Picture of user",
-        Modifier.size(50.dp)
-    )
-}
-
-@Composable
-fun Username(mainUser: User) {
-    Text(text = mainUser.userName, color = Color.Black,
-        fontFamily = FontFamily.Monospace)
-}
-
-@Composable
-fun FollowersCount(mainUser: User) {
-    Text("Followers: 0", color = Color.Black,
-        fontFamily = FontFamily.Monospace
-    )
-}
-
-@Composable
-fun FollowingCount(mainUser: User) {
-    Text("Following: 0", color = Color.Black,
-        fontFamily = FontFamily.Monospace
-    )
-}
-
-@Composable
-fun UploadPhotoButton(navController: NavController) {
-    IconButton(
-        onClick = {navController.navigate("imageUpload")},
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Upload Photo",
-            Modifier.size(50.dp)
-        )
-    }
-}
-
-@Composable
 private fun TheBottomBar(navController : NavController){
     Row(modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -188,9 +143,7 @@ private fun TheBottomBar(navController : NavController){
         }
         Column {
             IconButton(
-                onClick = {
-                    navController.navigate("userProfile")
-                },
+                onClick = {},
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
             ) {
@@ -201,6 +154,51 @@ private fun TheBottomBar(navController : NavController){
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ProfilePicture() {
+    // Replace with image resource
+    Icon(
+        imageVector = Icons.Default.Person,
+        contentDescription = "Profile Picture of user",
+        Modifier.size(50.dp)
+    )
+}
+
+@Composable
+fun Username(mainUser: User) {
+    Text(text = mainUser.userName, color = Color.Black,
+        fontFamily = FontFamily.Monospace)
+}
+
+@Composable
+fun FollowersCount(mainUser: User) {
+    Text("Followers: 0", color = Color.Black,
+        fontFamily = FontFamily.Monospace
+    )
+}
+
+@Composable
+fun FollowingCount(mainUser: User) {
+    Text("Following: 0", color = Color.Black,
+        fontFamily = FontFamily.Monospace
+    )
+}
+
+@Composable
+fun UploadPhotoButton(navController: NavController) {
+    IconButton(
+        onClick = {navController.navigate("imageUpload")},
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Upload Photo",
+            Modifier.size(50.dp)
+        )
     }
 }
 

@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.PagesForTesting.ImageUploadLogic
-import edu.towson.outfitapp.signup.signUpPage
+import edu.towson.outfitapp.signup.SignUpPage
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 //import edu.towson.outfitapp.MainPage.ForYouPage
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(navController,userViewModel)
                     }
                     composable("signUp") {
-                        signUpPage(navController, userViewModel = userViewModel, lifecycleScope)
+                        SignUpPage(navController, userViewModel = userViewModel, lifecycleScope)
                     }
                     composable("userProfile") {
                         UserProfileScreen(navController,userViewModel)

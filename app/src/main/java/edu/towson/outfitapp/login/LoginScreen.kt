@@ -23,13 +23,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.HelperFunctions.observeOnce
+import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -40,6 +48,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var showDialog by remember { mutableStateOf(false) }
     var wrongPasswordDialog by remember { mutableStateOf(false) }
     var accountNotFoundDialog by remember { mutableStateOf(false) }
+    var showProgress by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -105,7 +114,6 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Login Button
-            val context = LocalContext.current
             Button(
                 onClick = {
                     // new var
@@ -114,23 +122,24 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     val validPassword = isValidPassword(password)
                     if (!validUsername || !validPassword) {
                         showDialog = true
-                    } else{
-                        val userLive = userViewModel.loginCheck(userName,password)
-                        userLive.observeForever { user ->
+                    } else {
+                        val userLive = userViewModel.loginCheck(userName, password)
+                        userLive.observeOnce { user ->
                             if (user != null) {
                                 userViewModel.setCurrentUser(userLive)
-                                navController.navigate("userProfile")
+                                showProgress = true
                             } else {
                                 accountNotFoundDialog = true
                             }
                         }
-
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
             ) {
                 Text(text = "Login")
             }
+
+
             Spacer(modifier = Modifier.width(10.dp))
             // Sign-up Button
             Button(
@@ -146,6 +155,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             ShowWrongPasswordDialog(onDismiss = { wrongPasswordDialog = false })
         } else if(accountNotFoundDialog){
             ShowAccountDialog(onDismiss = { accountNotFoundDialog = false })
+        } else if(showProgress){
+            ShowProgressIndicator(navController,"userProfile")
         }
     }
 }
@@ -219,6 +230,7 @@ fun ShowAccountDialog(onDismiss: () -> Unit) {
         }
     )
 }
+
 
 
 @Preview
