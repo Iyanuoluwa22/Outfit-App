@@ -53,9 +53,11 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 
 @Composable
-fun ImageCard(post: String){
+fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewModel){
 
     // Created the variable that sees if the user clicked on a comment section:
     var lookingAtComments by remember { mutableStateOf(false) }
@@ -80,17 +82,17 @@ fun ImageCard(post: String){
         // Column holding the image, and the other data
         Column{
             // Image URL
-            val imageUrl = post
+            val imageUrl = post.postUrl
             // creating the Image
             val painter = rememberAsyncImagePainter(model = imageUrl)
             // post description
-            val description = "This jacket is FIRE!"
+            val description = post.postCaption
             // username of the poster
-            val userName = "Kevin"
+            val userName = userViewModel.getUserName(post.userEmail)
             // Number of likes the post has
-            var likes by remember { mutableIntStateOf(756) }
+            var likes = post.postLikeNum
             // cost of the fit in the post
-            val cost = 3289
+            val cost = post.totalCost
 
             // Show the USername of the poster with a '@' in front of it.
             Text(
@@ -116,12 +118,14 @@ fun ImageCard(post: String){
             Column(
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 10.dp)
             ){
-                Text(
-                    text = description,
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                if (description != null) {
+                    Text(
+                        text = description,
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -139,8 +143,9 @@ fun ImageCard(post: String){
                 // Show the cost
                 TextButton(
                     onClick = {
-                        // Change the number of likes that the Post has
-                        likes++
+
+                    postViewModel.likePost(post.postId)
+
                     }
                 ){
                     Row{

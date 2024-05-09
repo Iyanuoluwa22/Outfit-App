@@ -31,8 +31,13 @@ interface PostDao {
     @Query("SELECT * FROM comments WHERE postId = :postId")
     fun getCommentsForPost(postId: Int): LiveData<List<Comment>>
 
+
     @Update
-    fun addLikeToPost(postId: Post)
+    suspend fun addLikeToPost(postId: Post)
+
     @Query("UPDATE userPosts SET postLikeNum = postLikeNum + 1 WHERE postId = :postId")
-    fun addLikeToPost(postId: Int)
+  suspend fun addLikeToPost(postId: Int)
+
+
+
 }

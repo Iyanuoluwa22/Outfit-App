@@ -52,5 +52,11 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun likePost(postid: Int){
+        viewModelScope.launch {
+            postDao.addLikeToPost(postid)
+        }
+    }
+
 
 }

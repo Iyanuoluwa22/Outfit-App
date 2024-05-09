@@ -25,15 +25,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
 
-
-
-
-
-/*
 @Composable
 fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
     // show all of the posts that are not made by the current user.
@@ -46,18 +42,7 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
             .background(Color.Cyan)
     ){
         TopBar(navController)
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .padding(10.dp)
-        ){
-            items(shownPosts) { post ->
-                val user = DummyData.dummyUsers.find{it.Username == post.PostingUsername }
-                user?.let {Posted(post, it)}
-                Spacer(modifier = Modifier.height(10.dp))
-                mainUser.
-            }
-        }
+
     }
 
 }
@@ -95,53 +80,6 @@ fun TopBar(controller: NavController){
 
 @Composable
 fun Posted(post: Post, user: User){
-    Surface(
-        modifier = Modifier.fillMaxWidth(), color = Color.LightGray
-    ){
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ){
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                Text(
-                    text = "@${user.username}",
-                    modifier = Modifier.padding(20.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                )
-                Row{
-                    IconButton(
-                        onClick = { /*Handle the clicking*/ },
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Icon(Icons.Default.FavoriteBorder, contentDescription = "Like")
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    IconButton(
-                        onClick = { /*Handle the clicking*/ },
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Icon(Icons.Default.AddCircle, contentDescription = "Comment")
-                    }
-                }
-            }
-            Text(
-                text = post.userCaption,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
 
-    }
 }
 
-@Preview
-@Composable
-fun PreviewForYouPageScreen(){
-    val dummyUser = User("test", "test123", "John", "Doe", "john.doe@example.com")
-    val dummyUserViewModelF = UserViewModelF().apply {
-        setUser(dummyUser)
-    }
-    ForYouPage(navController = rememberNavController(), dummyUserViewModelF)
-}
-        */

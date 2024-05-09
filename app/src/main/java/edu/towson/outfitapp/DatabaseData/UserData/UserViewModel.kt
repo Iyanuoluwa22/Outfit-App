@@ -60,5 +60,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return userDao.login(userName, password)
     }
 
+    fun getUserName(userEmail:String): LiveData<String?>{
+        return userDao.getUsernameByEmail(userEmail)
+    }
+
 
 }

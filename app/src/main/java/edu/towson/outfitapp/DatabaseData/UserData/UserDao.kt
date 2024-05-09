@@ -21,6 +21,9 @@ interface UserDao {
     @Query("DELETE FROM users")
     suspend fun deleteAllUsers() // This deletes all user in the table (Please don't use unless you have too)
 
+    @Query("SELECT userName FROM users WHERE userEmail = :userEmail") // gets a user username through their email
+    fun getUsernameByEmail(userEmail: String): LiveData<String?>
+
     @Query("SELECT * FROM users WHERE userName = :username")
     fun getUserByUsername(username: String): LiveData<User?> // Gets one particular user based on user name
 
