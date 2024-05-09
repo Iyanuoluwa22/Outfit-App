@@ -19,6 +19,7 @@ import edu.towson.outfitapp.profile.AccountSettingsScreen
 import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 import androidx.lifecycle.lifecycleScope
+import edu.towson.outfitapp.MainPage.ForYouPage
 import edu.towson.outfitapp.data.AddData
 import edu.towson.outfitapp.profile.UserSearch
 
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OutfitAppTheme {
                 val navController = rememberNavController()
-               // AddData(userViewModel = userViewModel, postViewModel = postViewModel ) // This add pre made users and pictures to the database
+                //AddData(userViewModel = userViewModel, postViewModel = postViewModel ) // This add pre made users and pictures to the database
                 // only push each button once to avoid crashes
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         AccountSettingsScreen(navController,userViewModel,lifecycleScope)
                     }
                     composable("userFeed"){
-                        //ForYouPage(navController,userViewModel) //can uncomment for testing, might crash though
+                        ForYouPage(navController,userViewModel, postViewModel) //can uncomment for testing, might crash though
                     }
                     composable("imageUpload"){
                         ImageUploadLogic(postViewModel, userViewModel)

@@ -90,7 +90,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
             // username of the poster
             val userName = userViewModel.getUserName(post.userEmail)
             // Number of likes the post has
-            var likes = post.postLikeNum
+            val likes = post.postLikeNum
             // cost of the fit in the post
             val cost = post.totalCost
 
@@ -114,7 +114,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                 contentScale = ContentScale.Crop
             )
 
-            // Display the descrtiption of the post
+            // Display the description of the post
             Column(
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 10.dp)
             ){

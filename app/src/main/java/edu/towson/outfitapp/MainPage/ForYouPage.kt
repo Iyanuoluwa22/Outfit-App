@@ -20,66 +20,49 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.HelperFunctions.TheBottomBar
+import edu.towson.outfitapp.HelperFunctions.TheTopBar
 import edu.towson.outfitapp.data.DummyData
 import edu.towson.outfitapp.data.Post
 
 @Composable
-fun ForYouPage(navController: NavController, userViewModel: UserViewModel){
-    // show all of the posts that are not made by the current user.
-    val mainUser by userViewModel.mainUser.observeAsState()
-    val shownPosts = DummyData.Posts.filter { it.PostingUsername != mainUser?.userName }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Cyan)
-    ){
-        TopBar(navController)
-
-    }
-
-}
-
-// post DOA is needed to get the posts.
-
-
-
-@Composable
-fun TopBar(controller: NavController){
-    Surface(
-        modifier = Modifier.fillMaxWidth()
-    ){
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(15.dp)
-        ){
-            androidx.compose.material3.Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "User Profile Page",
-                modifier = Modifier
-                    .size(20.dp)
-                    .clickable { controller.navigate("UserProfileScreen") }
-                    .padding(end = 10.dp)
-            )
+fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
+    // show all posts
+    val postsState by postViewModel.getAllPosts().observeAsState(initial = emptyList())
+    Scaffold(topBar = {
+        TheTopBar(navController)
+    },
+        bottomBar = {
+            TheBottomBar(navController = navController)
         }
-        Text(
-            text = "Welcome, Christian!",
-            modifier = Modifier.padding(start = 10.dp),
-            style = MaterialTheme.typography.bodyMedium
-        )
+    ) { innerPadding ->
+        Text(text = "Hello")
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding)
+        ){
+            items(postsState) { post ->
+                ImageCard(post = post, userViewModel = userViewModel , postViewModel = postViewModel)
+            }
+        }
 
     }
-}
 
-@Composable
-fun Posted(post: Post, user: User){
 
 }
+
+
+
+
 

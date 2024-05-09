@@ -93,8 +93,8 @@ fun TheBottomBar(navController : NavController){
             Column {
                 IconButton(
                     onClick = {
-                        if(!navController.currentDestination.toString().equals("userSearch")){
-                            navController.navigate("userSearch")
+                        if(!navController.currentDestination.toString().equals("userFeed")){
+                            navController.navigate("userFeed")
                         }
                               },
                     modifier = Modifier
