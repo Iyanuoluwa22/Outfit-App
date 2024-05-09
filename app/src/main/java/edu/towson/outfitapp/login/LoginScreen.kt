@@ -1,6 +1,11 @@
 package edu.towson.outfitapp.login
 
 import android.app.Application
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.*
@@ -16,6 +21,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.*
@@ -50,11 +57,40 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var accountNotFoundDialog by remember { mutableStateOf(false) }
     var showProgress by remember { mutableStateOf(false) }
 
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 1.0f,
+        animationSpec = infiniteRepeatable(tween(5000), RepeatMode.Reverse),
+        label = "scale"
+    )
+
+    
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(10.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+
+            Text(
+                text = "Welcome to Outfitify",
+                fontSize = 38.sp,
+                modifier = Modifier
+                    .padding(9.dp)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        transformOrigin = TransformOrigin.Center
+                    }
+                    .align(Alignment.CenterHorizontally),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold,
+
+                )
+        Spacer(modifier = Modifier.height(200.dp))
+
         Icon(
             imageVector = Icons.Default.Person,
             contentDescription = null,

@@ -44,10 +44,10 @@ class MainActivity : ComponentActivity() {
                         AccountSettingsScreen(navController,userViewModel,lifecycleScope)
                     }
                     composable("userFeed"){
-                        //ForYouPage(navController,userViewModel) can uncomment for testing, might crash though
+                        //ForYouPage(navController,userViewModel) //can uncomment for testing, might crash though
                     }
                     composable("imageUpload"){
-                        ImageUploadLogic(postViewModel, null)
+                        ImageUploadLogic(postViewModel, userViewModel)
                     }
                 }
             }

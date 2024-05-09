@@ -15,8 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.Comment
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -32,19 +41,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import edu.towson.outfitapp.DatabaseData.PostData.Post
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.CurrentUser
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import java.time.LocalDate
 
 //  THIS PAGE IS UNFINISHED SO
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
+fun ImageUploadLogic(postViewModel: PostViewModel, userViewModel: UserViewModel) {
     val context = LocalContext.current
 
     val result = remember { mutableStateOf<Uri?>(null) }
@@ -57,6 +68,7 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
     var postCaption by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false ) }
     val currentDate: LocalDate = LocalDate.now()
+    val currentUser = userViewModel.mainUser
 
     Column(
         modifier = Modifier
@@ -74,9 +86,10 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
             )
         }
 
+
         Text(
             text = "Create a New Post ",
-            fontSize = 25.sp,
+            fontSize = 20.sp,
             modifier = Modifier.padding(20.dp),
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
@@ -86,22 +99,31 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
             onValueChange = { postCaption = it },
             label = { Text("Give your post a caption ") },
             modifier = Modifier.padding(15.dp),
+            leadingIcon = {
+                Icon(imageVector = Icons.AutoMirrored.Filled.Comment, contentDescription = null, Modifier.size(20.dp))
+            },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
             )
         )
+
         TextField(
             value = postOutfitTotalCost,
             onValueChange = { postOutfitTotalCost = it },
             label = { Text("Whats the total cost of your outfit?") },
-            modifier = Modifier.padding(15.dp),
+            modifier = Modifier.padding(13.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Blue
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.AttachMoney, contentDescription = null, Modifier.size(20.dp))
+            },
+
         )
 
 
@@ -125,15 +147,19 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
                             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                             context.contentResolver.takePersistableUriPermission(image, flag)
 
-                            val post = Post(
-                                "christianbastien020@gmail.com",
-                                image.toString(),
-                                currentDate.toString(),
-                                postCaption,
-                                0,
-                                postOutfitTotalCost.toInt()
-                            )
-                            postViewModel.addPost(post)
+                            val post = currentUser.value?.let {
+                                Post(
+                                    it.userEmail,
+                                    image.toString(),
+                                    currentDate.toString(),
+                                    postCaption,
+                                    0,
+                                    postOutfitTotalCost.toInt()
+                                )
+                            }
+                            if (post != null) {
+                                postViewModel.addPost(post)
+                            }
                         }
                     } else {
                         showDialog = true
@@ -144,35 +170,35 @@ fun ImageUploadLogic(postViewModel: PostViewModel, currentUser: CurrentUser?) {
                 Text(text = "Add")
             }
 
-            Button(
-                onClick = {
-                    postViewModel.deleteAllPost()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
-            ) {
-                Text(text = "delete")
-            }
+//            Button(
+//                onClick = {
+//                    postViewModel.deleteAllPost()
+//                },
+//                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+//            ) {
+//                Text(text = "delete")
+//            }
 
-        // Must be deleted later only used for testing
-        LazyColumn(
-            modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            items(postsState) { post ->
-                val imageUrl = post.postUrl
-                val painter = rememberAsyncImagePainter(model = imageUrl)
-
-                post.postUrl.let { Text(text = it.toString()) }
-
-                Image(
-                    painter = painter,
-                    contentDescription = post.postCaption,
-                    modifier = Modifier
-                        .size(150.dp, 150.dp)
-                        .padding(40.dp)
-                )
-
-            }
-        }
+         //Must be deleted later only used for testing
+//        LazyColumn(
+//            modifier = Modifier.padding(vertical = 16.dp)
+//        ) {
+//            items(postsState) { post ->
+//                val imageUrl = post.postUrl
+//                val painter = rememberAsyncImagePainter(model = imageUrl)
+//
+//                post.postUrl.let { Text(text = it.toString()) }
+//
+//                Image(
+//                    painter = painter,
+//                    contentDescription = post.postCaption,
+//                    modifier = Modifier
+//                        .size(150.dp, 150.dp)
+//                        .padding(40.dp)
+//                )
+//
+//            }
+//        }
 
     }
 

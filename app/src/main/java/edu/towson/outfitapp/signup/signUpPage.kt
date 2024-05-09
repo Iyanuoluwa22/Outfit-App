@@ -1,7 +1,15 @@
 package edu.towson.outfitapp.signup
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -31,7 +39,9 @@ import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.time.format.TextStyle
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
     val users by userViewModel.getAllUsers().observeAsState(initial = emptyList())
@@ -47,12 +57,29 @@ fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewM
     var showProgressBack by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+    val animatedColor by infiniteTransition.animateColor(
+        initialValue = Color(0xFF60DDAD),
+        targetValue = Color(0xFF4285F4),
+        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+        label = "color"
+    )
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+
+        BasicText(text = "Outfitify ",
+            style = androidx.compose.ui.text.TextStyle(fontSize = 35.sp, fontFamily = FontFamily.Monospace,fontWeight = FontWeight.Bold),
+            color = {  animatedColor}
+        )
+
+
+        Spacer(modifier = Modifier.height(150.dp))
+
         Text(
             text = "Sign Up",
             fontSize = 25.sp,
@@ -227,6 +254,7 @@ fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewM
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PreviewSignUpPage(){
