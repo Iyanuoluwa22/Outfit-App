@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface PostDao {
@@ -30,5 +31,8 @@ interface PostDao {
     @Query("SELECT * FROM comments WHERE postId = :postId")
     fun getCommentsForPost(postId: Int): LiveData<List<Comment>>
 
-
+    @Update
+    fun addLikeToPost(postId: Post)
+    @Query("UPDATE userPosts SET postLikeNum = postLikeNum + 1 WHERE postId = :postId")
+    fun addLikeToPost(postId: Int)
 }
