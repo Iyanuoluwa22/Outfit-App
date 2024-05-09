@@ -22,6 +22,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.HelperFunctions.TheBottomBar
+import edu.towson.outfitapp.HelperFunctions.TheTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,43 +31,10 @@ import edu.towson.outfitapp.DatabaseData.UserData.User
 fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
     val mainUser by userViewModel.mainUser.observeAsState()
     Scaffold(topBar = {
-        TopAppBar(
-            modifier = Modifier.heightIn(10.dp,200.dp),
-            colors = topAppBarColors(
-                containerColor = Color.Cyan,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
-            title = {
-                Text(text = "Outfitify",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(20.dp),
-                    color = Color.White,
-                    fontFamily = FontFamily.Cursive,
-                    textAlign = TextAlign.Center
-                )
-            },
-            actions = {
-                IconButton(
-                    onClick = { navController.navigate("accountSettings") },
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.White
-                    )
-                }
-            }
-        )
+        TheTopBar(navController)
     },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ) {
-               TheBottomBar(navController)
-            }
+            TheBottomBar(navController)
         }) {innerPadding ->
         Column(
             modifier = Modifier
@@ -96,65 +65,6 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
         }
     }
 
-}
-
-@Composable
-private fun TheBottomBar(navController : NavController){
-    Row(modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly){
-        Column {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Upload Photo",
-                    Modifier.size(50.dp)
-                )
-            }
-        }
-        Column {
-            IconButton(
-                onClick = { navController.navigate("userFeed")},
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Explore Page",
-                    Modifier.size(50.dp)
-                )
-            }
-        }
-        Column {
-            UploadPhotoButton(navController)
-        }
-        Column {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "User Notifications",
-                    Modifier.size(50.dp)
-                )
-            }
-        }
-        Column {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Profile Page",
-                    Modifier.size(50.dp)
-                )
-            }
-        }
-    }
 }
 
 @Composable

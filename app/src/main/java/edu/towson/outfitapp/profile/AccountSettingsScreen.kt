@@ -179,7 +179,9 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                 }
 
 
-
+            if (showProgress){
+                ShowProgressIndicator(navController, "",true )
+            }
         }
     }
 
@@ -228,8 +230,6 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                 }
             }
         )
-    } else if (showProgress){
-        ShowProgressIndicator(navController, "",true )
     }
 }
 

@@ -20,6 +20,7 @@ import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 import androidx.lifecycle.lifecycleScope
 import edu.towson.outfitapp.data.AddData
+import edu.towson.outfitapp.profile.UserSearch
 
 
 class MainActivity : ComponentActivity() {
@@ -51,6 +52,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("imageUpload"){
                         ImageUploadLogic(postViewModel, userViewModel)
+                    }
+                    composable("userSearch"){
+                        UserSearch(navController)
                     }
                 }
             }
