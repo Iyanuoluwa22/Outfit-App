@@ -19,6 +19,7 @@ import edu.towson.outfitapp.profile.AccountSettingsScreen
 import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 import androidx.lifecycle.lifecycleScope
+import edu.towson.outfitapp.data.AddData
 
 
 class MainActivity : ComponentActivity() {
@@ -30,6 +31,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             OutfitAppTheme {
                 val navController = rememberNavController()
+               // AddData(userViewModel = userViewModel, postViewModel = postViewModel ) // This add pre made users and pictures to the database
+                // only push each button once to avoid crashes
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
                         LoginScreen(navController,userViewModel)

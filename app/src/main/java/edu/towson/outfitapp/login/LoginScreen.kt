@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.*
@@ -65,13 +66,16 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
         label = "scale"
     )
 
-    
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+              ,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
 
             Text(
@@ -87,114 +91,125 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     .align(Alignment.CenterHorizontally),
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
+                color = Color(4282002273)
 
                 )
-        Spacer(modifier = Modifier.height(200.dp))
+            Spacer(modifier = Modifier.height(200.dp))
 
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = null,
-            Modifier.size(50.dp)
-        )
-        Text(
-            text = "Login",
-            fontSize = 30.sp,
-            modifier = Modifier.padding(20.dp),
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.Bold,
-        )
-        val keyboardController = LocalSoftwareKeyboardController.current
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                Modifier.size(50.dp),
+                tint = Color(4282002273)
+            )
+            Text(
+                text = "Login",
+                fontSize = 30.sp,
+                modifier = Modifier.padding(20.dp),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold,
+                color = Color(4282002273)
+            )
+            val keyboardController = LocalSoftwareKeyboardController.current
 
-        TextField(
-            value = userName,
-            onValueChange = { userName = it.lowercase(Locale.getDefault())},
-            label = { Text("User Name") },
-            modifier = Modifier.padding(10.dp),
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Email, contentDescription = null, Modifier.size(20.dp))
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.LightGray,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Blue,
-            ),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
-        )
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            modifier = Modifier.padding(10.dp),
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Lock, contentDescription = null, Modifier.size(20.dp))
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.LightGray,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Blue,
-            ),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
-            ,
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Row(
-            modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Login Button
-            Button(
-                onClick = {
-                    // new var
-                    val user = userViewModel.loginCheck(userName, password)
-                    val validUsername = isValidUsername(userName)
-                    val validPassword = isValidPassword(password)
-                    if (!validUsername || !validPassword) {
-                        showDialog = true
-                    } else {
-                        val userLive = userViewModel.loginCheck(userName, password)
-                        userLive.observeOnce { user ->
-                            if (user != null) {
-                                userViewModel.setCurrentUser(userLive)
-                                showProgress = true
-                            } else {
-                                accountNotFoundDialog = true
+            TextField(
+                value = userName,
+                onValueChange = { userName = it.lowercase(Locale.getDefault()) },
+                label = { Text("User Name") },
+                modifier = Modifier.padding(10.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = null,
+                        Modifier.size(20.dp)
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Blue,
+                ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+            )
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Password") },
+                modifier = Modifier.padding(10.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        Modifier.size(20.dp)
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Blue,
+                ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+                visualTransformation = PasswordVisualTransformation()
+            )
+            Row(
+                modifier = Modifier.padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Login Button
+                Button(
+                    onClick = {
+                        // new var
+                        val user = userViewModel.loginCheck(userName, password)
+                        val validUsername = isValidUsername(userName)
+                        val validPassword = isValidPassword(password)
+                        if (!validUsername || !validPassword) {
+                            showDialog = true
+                        } else {
+                            val userLive = userViewModel.loginCheck(userName, password)
+                            userLive.observeOnce { user ->
+                                if (user != null) {
+                                    userViewModel.setCurrentUser(userLive)
+                                    showProgress = true
+                                } else {
+                                    accountNotFoundDialog = true
+                                }
                             }
                         }
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-            ) {
-                Text(text = "Login")
-            }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                ) {
+                    Text(text = "Login")
+                }
 
 
-            Spacer(modifier = Modifier.width(10.dp))
-            // Sign-up Button
-            Button(
-                onClick = { navController.navigate("signUp") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
-            ) {
-                Text(text = "Sign-Up")
+                Spacer(modifier = Modifier.width(10.dp))
+                // Sign-up Button
+                Button(
+                    onClick = { navController.navigate("signUp") },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                ) {
+                    Text(text = "Sign-Up")
+                }
+            }
+            if (showDialog) {
+                ShowAlertDialog(onDismiss = { showDialog = false })
+            } else if (wrongPasswordDialog) {
+                ShowWrongPasswordDialog(onDismiss = { wrongPasswordDialog = false })
+            } else if (accountNotFoundDialog) {
+                ShowAccountDialog(onDismiss = { accountNotFoundDialog = false })
+            } else if (showProgress) {
+                ShowProgressIndicator(navController, "userProfile")
             }
         }
-        if (showDialog) {
-            ShowAlertDialog(onDismiss = { showDialog = false })
-        } else if(wrongPasswordDialog){
-            ShowWrongPasswordDialog(onDismiss = { wrongPasswordDialog = false })
-        } else if(accountNotFoundDialog){
-            ShowAccountDialog(onDismiss = { accountNotFoundDialog = false })
-        } else if(showProgress){
-            ShowProgressIndicator(navController,"userProfile")
-        }
-    }
+
 }
 
 
