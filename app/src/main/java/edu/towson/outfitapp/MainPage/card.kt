@@ -32,6 +32,7 @@ import androidx.compose.material3.TextField
 import edu.towson.outfitapp.DatabaseData.PostData.Post
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +74,8 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
 
     // Card that wil display the Image, caption, price of the fit, likes, and comments.
     Card(
-        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier.padding(16.dp),
+        shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = Color.Black
 
@@ -88,7 +90,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
             // post description
             val description = post.postCaption
             // username of the poster
-            val userName = userViewModel.getUserName(post.userEmail)
+            val userName by userViewModel.getUserName(post.userEmail).observeAsState()
             // Number of likes the post has
             val likes = post.postLikeNum
             // cost of the fit in the post
@@ -96,6 +98,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
 
             // Show the USername of the poster with a '@' in front of it.
             Text(
+                modifier = Modifier.padding(5.dp),
                 text = "@${userName}",
                 color = Color.White,
                 fontSize = 22.sp,
@@ -182,7 +185,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = "Comments",
-                        color = Color.Cyan,
+                        color = Color.Black,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Light
                     )
@@ -219,7 +222,7 @@ fun CommentSection(
         Surface(
             modifier = Modifier.padding(10.dp),
             shape = MaterialTheme.shapes.small,
-            color = Color.Gray
+            color = Color.White
         ) {
             Column(
                 modifier = Modifier.padding(.15.dp),
@@ -227,7 +230,7 @@ fun CommentSection(
             ) {
                 Text(
                     text = "Comments Section: ",
-                    color = Color.Cyan,
+                    color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -236,7 +239,7 @@ fun CommentSection(
                 comments.forEach { comment ->
                     Text(
                         text = comment,
-                        color = Color.White,
+                        color = Color.Black,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal
                     )

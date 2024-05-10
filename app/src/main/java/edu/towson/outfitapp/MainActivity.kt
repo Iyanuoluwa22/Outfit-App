@@ -6,6 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.MaterialTheme
+
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.lightColorScheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -30,35 +35,44 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme
+            ){
             OutfitAppTheme {
                 val navController = rememberNavController()
                 //AddData(userViewModel = userViewModel, postViewModel = postViewModel ) // This add pre made users and pictures to the database
-                // only push each button once to avoid crashes
+                //only push each button once to avoid crashes
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
-                        LoginScreen(navController,userViewModel)
+                        LoginScreen(navController, userViewModel)
                     }
                     composable("signUp") {
                         SignUpPage(navController, userViewModel = userViewModel, lifecycleScope)
                     }
                     composable("userProfile") {
-                        UserProfileScreen(navController,userViewModel)
+                        UserProfileScreen(navController, userViewModel)
                     }
-                    composable("accountSettings"){
-                        AccountSettingsScreen(navController,userViewModel,lifecycleScope)
+                    composable("accountSettings") {
+                        AccountSettingsScreen(navController, userViewModel, lifecycleScope)
                     }
-                    composable("userFeed"){
-                        ForYouPage(navController,userViewModel, postViewModel) //can uncomment for testing, might crash though
+                    composable("userFeed") {
+                        ForYouPage(
+                            navController,
+                            userViewModel,
+                            postViewModel
+                        ) //can uncomment for testing, might crash though
                     }
-                    composable("imageUpload"){
+                    composable("imageUpload") {
                         ImageUploadLogic(postViewModel, userViewModel)
                     }
-                    composable("userSearch"){
+                    composable("userSearch") {
                         UserSearch(navController)
                     }
                 }
             }
+        }
         }
     }
 }

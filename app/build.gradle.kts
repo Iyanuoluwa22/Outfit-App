@@ -103,6 +103,8 @@ dependencies {
     api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
+    implementation("androidx.compose.material3:material3:1.2.1")
+
     // coil components
     implementation("io.coil-kt:coil-compose:2.6.0")
 

@@ -48,12 +48,14 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postV
             TheBottomBar(navController = navController)
         }
     ) { innerPadding ->
-        Text(text = "Hello")
+
+
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ){
             items(postsState) { post ->
                 ImageCard(post = post, userViewModel = userViewModel , postViewModel = postViewModel)
+                Spacer(modifier = Modifier.height(6.dp))
             }
         }
 

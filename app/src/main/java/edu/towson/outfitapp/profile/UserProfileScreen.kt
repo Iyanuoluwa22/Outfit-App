@@ -30,6 +30,7 @@ import edu.towson.outfitapp.HelperFunctions.TheTopBar
 @Composable
 fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
     val mainUser by userViewModel.mainUser.observeAsState()
+
     Scaffold(topBar = {
         TheTopBar(navController)
     },
