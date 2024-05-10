@@ -1,5 +1,6 @@
 package edu.towson.outfitapp.login
 
+import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -48,6 +49,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {

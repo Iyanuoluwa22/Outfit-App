@@ -1,7 +1,11 @@
 package edu.towson.outfitapp.profile
 
 import android.annotation.SuppressLint
+import android.app.Application
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,21 +13,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.HelperFunctions.TheBottomBar
 import edu.towson.outfitapp.HelperFunctions.TheTopBar
+import edu.towson.outfitapp.HelperFunctions.observeOnce
 import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserSearch(navController: NavController){
+fun UserSearch(navController: NavController, userViewModel: UserViewModel){
     Scaffold(topBar = {
         TheTopBar(navController)
     },
@@ -32,6 +38,9 @@ fun UserSearch(navController: NavController){
         }
     ) { innerPadding ->
         var userName by remember { mutableStateOf("") }
+        var accountNF by remember { mutableStateOf(false) }
+        var previewUsers by remember { mutableStateOf<List<User?>?>(null) }
+        val keyboardController = LocalSoftwareKeyboardController.current
         Column(
             modifier = Modifier
                 .padding(innerPadding), // Apply innerPadding
@@ -60,11 +69,21 @@ fun UserSearch(navController: NavController){
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
                     ),
-                    //keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                 )
 
                 IconButton(
-                    onClick = {},
+                    onClick = {
+                        val usersWithPrefix = userViewModel.userDao.getUsersByUsernamePrefix(userName)
+
+                        usersWithPrefix.observeOnce {users ->
+                            if(users != null){
+                                previewUsers = users
+                            } else {
+                                accountNF = true
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
                 ) {
@@ -75,12 +94,98 @@ fun UserSearch(navController: NavController){
                     )
                 }
             }
+
+            previewUsers?.let { users ->
+                PreviewUsersWithPrefix(users)
+            }
+
+            if(accountNF){
+                AccountNotFoundDialog(onDismiss = {accountNF = false})
+            }
         }
     }
 }
 
+@Composable
+fun PreviewUsersWithPrefix(users: List<User?>) {
+    LazyColumn {
+        items(users) { user ->
+            user?.let {
+                UserListItem(user = user)
+            }
+        }
+    }
+}
+
+@Composable
+fun UserListItem(user: User) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable { /* Handle click */ },
+        color = Color.LightGray, // Set the background color
+        shape = MaterialTheme.shapes.medium, // Optional: Apply a shape to the surface
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(5.dp),
+                tint = Color(4282002273)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Username")
+                Text(text = user.userName)
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "First Name")
+                Text(text = user.firstName)
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Last Name")
+                Text(text = user.lastName)
+            }
+        }
+    }
+}
+
+
+
+@Composable
+fun AccountNotFoundDialog(onDismiss: () -> Unit){
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Account Not Found") },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+            ) {
+                Text("OK")
+            }
+        }
+    )
+}
+
+
 @Preview
 @Composable
 fun PreviewUserSearch(){
-    UserSearch(rememberNavController())
+    val applicationContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val application = applicationContext as Application // Cast the context to an Application
+    val dummyUserViewModel = UserViewModel(application)
+    UserSearch(rememberNavController(),dummyUserViewModel)
 }

@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import edu.towson.outfitapp.profile.UploadPhotoButton
 import kotlinx.coroutines.delay
 
 fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
@@ -93,7 +92,7 @@ fun TheBottomBar(navController : NavController){
             Column {
                 IconButton(
                     onClick = {
-                        if(!navController.currentDestination.toString().equals("userFeed")){
+                        if (navController.currentDestination?.route != "userFeed") {
                             navController.navigate("userFeed")
                         }
                               },
@@ -109,7 +108,10 @@ fun TheBottomBar(navController : NavController){
             }
             Column {
                 IconButton(
-                    onClick = {navController.navigate("userSearch")},
+                    onClick = {if (navController.currentDestination?.route != "userSearch") {
+                        navController.navigate("userSearch")
+                    }
+                              },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 ) {
@@ -121,7 +123,21 @@ fun TheBottomBar(navController : NavController){
                 }
             }
             Column {
-                UploadPhotoButton(navController)
+                IconButton(
+                    onClick = {
+                        if (navController.currentDestination?.route != "imageUpload") {
+                            navController.navigate("imageUpload")
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Upload Photo",
+                        Modifier.size(50.dp)
+                    )
+                }
             }
             Column {
                 IconButton(onClick = { /*TODO*/ }) {
@@ -135,9 +151,9 @@ fun TheBottomBar(navController : NavController){
             Column {
                 IconButton(
                     onClick = {
-                              if(!navController.currentDestination.toString().equals("userProfile")){
-                                  navController.navigate("userProfile")
-                              }
+                        if (navController.currentDestination?.route != "userProfile") {
+                            navController.navigate("userProfile")
+                        }
                     },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)

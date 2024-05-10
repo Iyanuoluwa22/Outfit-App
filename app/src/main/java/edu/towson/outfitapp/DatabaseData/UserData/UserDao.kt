@@ -41,4 +41,6 @@ interface UserDao {
     @Query("UPDATE users SET lastName = :newLastName WHERE userName = :username")
     suspend fun changeLastName(username: String, newLastName: String)
 
+    @Query("SELECT * FROM users WHERE userName LIKE :username || '%' ORDER BY userName ASC")
+    fun getUsersByUsernamePrefix(username: String): LiveData<List<User?>?>
 }

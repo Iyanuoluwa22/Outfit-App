@@ -12,7 +12,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     val userDao: UserDao
     private val allUsers: LiveData<List<User>>
     private val _mainUser = MutableLiveData<User?>(null)
+    private val _viewingUser = MutableLiveData<User?>(null)
     val mainUser: LiveData<User?> = _mainUser
+    val viewingUser : LiveData<User?>  = _viewingUser
 
     init {
         val database = UserDatabase.getDatabase(application)
@@ -32,6 +34,20 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 _mainUser.postValue(user)
             }
         }
+    }
+
+    fun setViewingUser(userLiveData: LiveData<User?>){
+        viewModelScope.launch {
+            // Observe the LiveData and get the value when it changes
+            userLiveData.observeForever { user ->
+                // Update the value of _viewingUser with the observed user value
+                _viewingUser.postValue(user)
+            }
+        }
+    }
+
+    fun resetViewingUser(){
+        _viewingUser.removeObserver { }
     }
 
     fun addUser(user: User) {
@@ -64,5 +80,8 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return userDao.getUsernameByEmail(userEmail)
     }
 
+    fun getAllUsersWithPrefix(userName:String) : LiveData<List<User?>?>{
+        return userDao.getUsersByUsernamePrefix(userName)
+    }
 
 }

@@ -52,16 +52,7 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
                 horizontalArrangement = Arrangement.Center) {
                 mainUser?.let { Username(it) }
             }
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly) {
-                mainUser?.let { FollowersCount(it) }
-                mainUser?.let { FollowingCount(it) }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
+            
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -83,36 +74,6 @@ fun Username(mainUser: User) {
     Text(text = mainUser.userName, color = Color.Black,
         fontFamily = FontFamily.Monospace)
 }
-
-@Composable
-fun FollowersCount(mainUser: User) {
-    Text("Followers: 0", color = Color.Black,
-        fontFamily = FontFamily.Monospace
-    )
-}
-
-@Composable
-fun FollowingCount(mainUser: User) {
-    Text("Following: 0", color = Color.Black,
-        fontFamily = FontFamily.Monospace
-    )
-}
-
-@Composable
-fun UploadPhotoButton(navController: NavController) {
-    IconButton(
-        onClick = {navController.navigate("imageUpload")},
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Upload Photo",
-            Modifier.size(50.dp)
-        )
-    }
-}
-
 
 @Preview
 @Composable

@@ -67,14 +67,15 @@ class MainActivity : ComponentActivity() {
                     composable("imageUpload") {
                         ImageUploadLogic(postViewModel, userViewModel)
                     }
+
                     composable("userSearch") {
-                        UserSearch(navController)
+                        UserSearch(navController,userViewModel)
                     }
                 }
             }
         }
-        }
     }
+}
 }
 
 
