@@ -52,6 +52,7 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postV
 
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
+                .background(Color.Black)
         ){
             items(postsState) { post ->
                 ImageCard(post = post, userViewModel = userViewModel , postViewModel = postViewModel)

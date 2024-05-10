@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -50,16 +52,18 @@ fun TheTopBar(navController: NavController){
     TopAppBar(
         modifier = Modifier.heightIn(10.dp,200.dp),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Cyan,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = Color.Black,
+            titleContentColor = Color.White,
         ),
         title = {
             Text(text = "Outfitify",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(20.dp),
+                    .size(25.dp),
+
                 color = Color.White,
-                fontFamily = FontFamily.Cursive,
+
+                fontFamily = FontFamily.SansSerif,
                 textAlign = TextAlign.Center
             )
         },
@@ -83,8 +87,8 @@ fun TheTopBar(navController: NavController){
 @Composable
 fun TheBottomBar(navController : NavController){
     BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.primary,
+        containerColor = Color.Black,
+        contentColor = Color.White,
     ) {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

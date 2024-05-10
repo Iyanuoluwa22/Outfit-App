@@ -58,5 +58,11 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun unLikePost(postId: Int ){
+        viewModelScope.launch {
+            postDao.unLikeToPost(postId)
+        }
+    }
+
 
 }

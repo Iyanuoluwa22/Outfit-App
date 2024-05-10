@@ -36,7 +36,10 @@ interface PostDao {
     suspend fun addLikeToPost(postId: Post)
 
     @Query("UPDATE userPosts SET postLikeNum = postLikeNum + 1 WHERE postId = :postId")
-  suspend fun addLikeToPost(postId: Int)
+     suspend fun addLikeToPost(postId: Int)
+
+    @Query("UPDATE userPosts SET postLikeNum = postLikeNum - 1 WHERE postId = :postId")
+    suspend fun unLikeToPost(postId: Int)
 
 
 

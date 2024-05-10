@@ -77,7 +77,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
         modifier = Modifier.padding(16.dp),
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
-            containerColor = Color.Black
+            containerColor = Color.White
 
         )
     ){
@@ -96,12 +96,17 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
             // cost of the fit in the post
             val cost = post.totalCost
 
+            var like by remember {mutableStateOf(false)}
+            var likedColor by remember {
+                mutableStateOf(Color.Gray)
+            }
+
             // Show the USername of the poster with a '@' in front of it.
             Text(
                 modifier = Modifier.padding(5.dp),
                 text = "@${userName}",
-                color = Color.White,
-                fontSize = 22.sp,
+                color = Color.Black,
+                fontSize = 19.sp,
                 fontWeight = FontWeight.Light
             )
 
@@ -124,7 +129,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                 if (description != null) {
                     Text(
                         text = description,
-                        color = Color.White,
+                        color = Color.Black,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -134,7 +139,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
 
                 Text(
                     text = "Fit Cost:  $${cost}",
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -146,16 +151,22 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                 // Show the cost
                 TextButton(
                     onClick = {
-
-                    postViewModel.likePost(post.postId)
-
+                        like = !like    // Basic like and unlike feature
+                        if(like){
+                            postViewModel.likePost(post.postId)
+                            likedColor = Color.Red
+                        }
+                        else {
+                            likedColor = Color.Gray
+                            postViewModel.unLikePost(post.postId)
+                        }
                     }
                 ){
                     Row{
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = "Like Button",
-                            tint = Color.Red
+                            tint = likedColor
                         )
 
                         Spacer(modifier = Modifier.width(10.dp))
@@ -179,7 +190,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                     Icon(
                         imageVector = Icons.Filled.Comment,
                         contentDescription = "Comments",
-                        tint = Color.Green
+                        tint = Color.Gray
                     )
 
                     Spacer(modifier = Modifier.width(10.dp))
