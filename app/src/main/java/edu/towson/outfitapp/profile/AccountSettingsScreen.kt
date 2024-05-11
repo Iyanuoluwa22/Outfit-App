@@ -25,6 +25,7 @@ import edu.towson.outfitapp.data.*
 import androidx.lifecycle.*
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
+import edu.towson.outfitapp.HelperFunctions.TheTopBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,29 +41,10 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
     var showErrorPopup by remember { mutableStateOf(false) } // State for showing error popup
     var showDeleteConfirmation by remember { mutableStateOf(false) } // State for showing delete confirmation
     var showProgress by remember { mutableStateOf(false) }
-
+    var showProgressLogin by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.heightIn(10.dp, 200.dp),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Cyan,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        text = "Outfitify",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .size(20.dp),
-                        color = Color.White,
-                        fontFamily = FontFamily.Cursive,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            )
-        }
+        topBar = {TheTopBar(navController = navController)}
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -125,9 +107,11 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
                 )
             }
-                Row(
+                Column(
                     modifier = Modifier
                         .padding(10.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
                         onClick = {
@@ -143,7 +127,6 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                                         }
                                     }
                                     showProgress = true
-                                    //navController.popBackStack()
                                 }
                             }
                         },
@@ -156,18 +139,15 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
 
                     Button(
                         onClick = {
-                            navController.navigate("login") {
-                                popUpTo("login") { inclusive = true }
-                            }
+                            showProgressLogin = true
                         },
                         modifier = Modifier.wrapContentWidth()
                     ) {
                         Text("Log Out")
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
-                }
 
-                Row(modifier = Modifier.padding(15.dp)){
+                    Spacer(modifier = Modifier.width(10.dp))
+
                     Button(
                         onClick = {
                             showDeleteConfirmation = true
@@ -176,11 +156,25 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                     ) {
                         Text("Delete Account")
                     }
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Button(
+                        onClick = {
+                            showProgress = true
+                        },
+                        modifier = Modifier.wrapContentWidth()
+                    ) {
+                        Text("Cancel")
+                    }
+
                 }
 
 
             if (showProgress){
                 ShowProgressIndicator(navController, "",true )
+            } else if(showProgressLogin){
+                ShowProgressIndicator(navController, route = "login", popUpTo = true, popUpToNav = "login" )
             }
         }
     }

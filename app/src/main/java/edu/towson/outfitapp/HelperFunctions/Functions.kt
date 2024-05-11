@@ -1,6 +1,7 @@
 package edu.towson.outfitapp.HelperFunctions
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -30,17 +31,28 @@ fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
 }
 
 @Composable
-fun ShowProgressIndicator(navController: NavController,route : String, popBack : Boolean = false) {
+fun ShowProgressIndicator(navController: NavController,route : String = "",
+                          popBack : Boolean = false,
+                          popUpTo : Boolean = false,
+                          popUpToNav: String = "") {
     // Display CircularProgressIndicator
     CircularProgressIndicator(
         trackColor = Color.Blue
     )
+
+    if((popBack && popUpTo)){
+        Log.d(null,"Nav Controller cannot Pop Back and Pop Up To")
+    }
     // Start a coroutine to delay hiding the progress indicator
     LaunchedEffect(key1 = true) {
         delay(1000) // Delay for 1 seconds
         if(popBack){
             navController.popBackStack()
-        }else{
+        }else if(popUpTo){
+            navController.navigate(route) {
+                popUpTo(popUpToNav) { inclusive = true }
+            }
+        } else{
             navController.navigate(route)
         }
     }

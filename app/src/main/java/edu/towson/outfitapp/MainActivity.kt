@@ -8,9 +8,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,8 +22,8 @@ import edu.towson.outfitapp.profile.UserProfileScreen
 import edu.towson.outfitapp.ui.theme.OutfitAppTheme
 import androidx.lifecycle.lifecycleScope
 import edu.towson.outfitapp.MainPage.ForYouPage
-import edu.towson.outfitapp.data.AddData
 import edu.towson.outfitapp.profile.UserSearch
+import edu.towson.outfitapp.profile.ViewAUser
 
 
 class MainActivity : ComponentActivity() {
@@ -44,6 +41,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 //AddData(userViewModel = userViewModel, postViewModel = postViewModel ) // This add pre made users and pictures to the database
                 //only push each button once to avoid crashes
+
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
                         LoginScreen(navController, userViewModel)
@@ -62,7 +60,7 @@ class MainActivity : ComponentActivity() {
                             navController,
                             userViewModel,
                             postViewModel
-                        ) //can uncomment for testing, might crash though
+                        )
                     }
                     composable("imageUpload") {
                         ImageUploadLogic(postViewModel, userViewModel)
@@ -71,7 +69,11 @@ class MainActivity : ComponentActivity() {
                     composable("userSearch") {
                         UserSearch(navController,userViewModel)
                     }
+                    composable("viewUser"){
+                        ViewAUser(navController,userViewModel)
+                    }
                 }
+
             }
         }
     }

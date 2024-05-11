@@ -1,0 +1,68 @@
+package edu.towson.outfitapp.profile
+
+import android.app.Application
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.*
+import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.HelperFunctions.*
+
+@Composable
+fun ViewAUser(navController: NavController, userViewModel: UserViewModel){
+    val user by userViewModel.viewingUser.observeAsState()
+    var showProgress by remember { mutableStateOf(false)    }
+    Scaffold(topBar = { TheTopBar(navController = navController)},
+        bottomBar = { TheBottomBar(navController = navController)}) {innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding)
+                .background(color = Color(0.914f, 0.898f, 0.898f, 1.0f)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                ProfilePicture()
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                user?.let { Username(it) }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Button(onClick = {showProgress = true }) {
+                Text(text = "Back")
+            }
+            
+            if (showProgress){
+                ShowProgressIndicator(navController, popBack = true)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewViewAUser(){
+    val dummyUser = User("test@gmail.com", "test", "gang", "gang", "gang")
+    val userLiveData = MutableLiveData<User>()
+    userLiveData.value = dummyUser
+    val applicationContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val application = applicationContext as Application // Cast the context to an Application
+    val dummyUserViewModel = UserViewModel(application)
+    dummyUserViewModel.setCurrentUser(userLiveData)
+    ViewAUser(rememberNavController(), userViewModel = dummyUserViewModel)
+}
