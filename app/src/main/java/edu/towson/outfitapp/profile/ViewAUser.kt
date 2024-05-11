@@ -43,7 +43,8 @@ fun ViewAUser(navController: NavController, userViewModel: UserViewModel){
 
             Spacer(modifier = Modifier.height(16.dp))
             
-            Button(onClick = {showProgress = true }) {
+            Button(onClick = {showProgress = true },
+                modifier = Modifier.padding(5.dp)) {
                 Text(text = "Back")
             }
             

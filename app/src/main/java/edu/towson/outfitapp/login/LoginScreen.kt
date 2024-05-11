@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     var userName by remember { mutableStateOf("") }

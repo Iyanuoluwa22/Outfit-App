@@ -81,7 +81,12 @@ fun TheTopBar(navController: NavController){
         },
         actions = {
             IconButton(
-                onClick = { navController.navigate("accountSettings") },
+                onClick = {
+                    if (navController.currentDestination?.route != "accountSettings") {
+                        navController.navigate("accountSettings")
+                    }
+                }
+                    ,
                 modifier = Modifier.padding(horizontal = 12.dp)
             ) {
                 Icon(
