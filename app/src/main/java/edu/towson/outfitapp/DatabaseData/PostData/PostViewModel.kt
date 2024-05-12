@@ -46,10 +46,8 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun getCurrentUserPosts(email: String){
-        viewModelScope.launch {
-            postDao.getPostsByUserEmail(email)
-        }
+    fun getCurrentUserPosts(email: String) : LiveData<List<Post?>?>{
+        return postDao.getPostsByUserEmail(email)
     }
 
     fun likePost(postid: Int){

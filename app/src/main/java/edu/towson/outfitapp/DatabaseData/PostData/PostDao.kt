@@ -26,7 +26,7 @@ interface PostDao {
     suspend fun deleteAllPost()
 
     @Query("SELECT * FROM userPosts WHERE userEmail = :email")
-    suspend fun getPostsByUserEmail(email: String): List<Post> // This gets a particular list of post based on the userID
+    fun getPostsByUserEmail(email: String): LiveData<List<Post?>?> // This gets a particular list of post based on the userID
 
     @Query("SELECT * FROM comments WHERE postId = :postId")
     fun getCommentsForPost(postId: Int): LiveData<List<Comment>>

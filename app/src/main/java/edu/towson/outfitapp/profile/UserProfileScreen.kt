@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -20,40 +22,60 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
+import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import edu.towson.outfitapp.HelperFunctions.TheBottomBar
 import edu.towson.outfitapp.HelperFunctions.TheTopBar
+import edu.towson.outfitapp.MainPage.ImageCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
+fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
     val mainUser by userViewModel.mainUser.observeAsState()
-
-    Scaffold(topBar = {
-        TheTopBar(navController)
-    },
-        bottomBar = {
-            TheBottomBar(navController)
-        }) {innerPadding ->
-        Column(
+    val allPosts by postViewModel.getAllPosts().observeAsState(initial = emptyList())
+    val userPosts = allPosts.filter { post -> post.userEmail == mainUser?.userEmail }
+    Scaffold(
+        topBar = { TheTopBar(navController = navController) },
+        bottomBar = { TheBottomBar(navController = navController) }
+    ) { innerPadding ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding)
+                .fillMaxSize()
                 .background(color = Color(0.914f, 0.898f, 0.898f, 1.0f))
         ) {
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center) {
-                ProfilePicture()
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    ProfilePicture()
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    mainUser?.let { Username(it) }
+                }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center) {
-                mainUser?.let { Username(it) }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .align(Alignment.BottomCenter)
+            ) {
+                items(userPosts) { post ->
+                    ImageCard(post = post, userViewModel = userViewModel, postViewModel = postViewModel)
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
@@ -85,5 +107,5 @@ fun PreviewUserProfileScreen() {
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
+    //UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
 }

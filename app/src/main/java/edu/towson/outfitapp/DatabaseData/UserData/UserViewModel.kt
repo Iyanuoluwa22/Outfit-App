@@ -1,6 +1,7 @@
 package edu.towson.outfitapp.DatabaseData.UserData
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +11,7 @@ import kotlinx.coroutines.launch
 class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     val userDao: UserDao
-    private val allUsers: LiveData<List<User>>
+    private val allUsers: LiveData<List<User?>?>
     private val _mainUser = MutableLiveData<User?>(null)
     private val _viewingUser = MutableLiveData<User?>(null)
     val mainUser: LiveData<User?> = _mainUser
@@ -20,9 +21,14 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         val database = UserDatabase.getDatabase(application)
         userDao = database.userDao()
         allUsers = userDao.readAllData()
+
+        // Log the number of users when LiveData is updated
+        allUsers.observeForever { users ->
+            Log.d("UserViewModel", "Number of users: ${users?.size}")
+        }
     }
 
-    fun getAllUsers(): LiveData<List<User>> {
+    fun getAllUsers(): LiveData<List<User?>?> {
         return allUsers
     }
 

@@ -1,40 +1,23 @@
 package edu.towson.outfitapp.DatabaseData.PagesForTesting
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Comment
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,22 +25,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.unit.*
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.navigation.NavController
 import edu.towson.outfitapp.DatabaseData.PostData.Post
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
-import edu.towson.outfitapp.DatabaseData.UserData.CurrentUser
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
+import edu.towson.outfitapp.HelperFunctions.TheBottomBar
+import edu.towson.outfitapp.HelperFunctions.TheTopBar
 import java.time.LocalDate
-
-//  THIS PAGE IS UNFINISHED SO
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ImageUploadLogic(postViewModel: PostViewModel, userViewModel: UserViewModel) {
+fun ImageUploadLogic(navController: NavController,postViewModel: PostViewModel, userViewModel: UserViewModel) {
     val context = LocalContext.current
-
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     val result = remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         result.value = it
@@ -69,62 +51,64 @@ fun ImageUploadLogic(postViewModel: PostViewModel, userViewModel: UserViewModel)
     var showDialog by remember { mutableStateOf(false ) }
     val currentDate: LocalDate = LocalDate.now()
     val currentUser = userViewModel.mainUser
+    Scaffold(topBar = {TheTopBar(navController)},
+        bottomBar = {TheBottomBar(navController)}){ innerPadding ->
 
-    Column(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
 
-    )
-    {
+        )
+        {
 
-        if(showDialog){
-            MyDialog(
-                onDismiss = {showDialog = false},
-                onConfirm = {showDialog = false}
+            if(showDialog){
+                MyDialog(
+                    onDismiss = {showDialog = false},
+                    onConfirm = {showDialog = false}
+                )
+            }
+
+
+            Text(
+                text = "Create a New Post ",
+                fontSize = 20.sp,
+                modifier = Modifier.padding(20.dp),
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold
             )
-        }
-
-
-        Text(
-            text = "Create a New Post ",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(20.dp),
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold
-        )
-        TextField(
-            value = postCaption,
-            onValueChange = { postCaption = it },
-            label = { Text("Give your post a caption ") },
-            modifier = Modifier.padding(15.dp),
-            leadingIcon = {
-                Icon(imageVector = Icons.AutoMirrored.Filled.Comment, contentDescription = null, Modifier.size(20.dp))
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.LightGray,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Blue
+            TextField(
+                value = postCaption,
+                onValueChange = { postCaption = it },
+                label = { Text("Give your post a caption ") },
+                modifier = Modifier.padding(15.dp),
+                leadingIcon = {
+                    Icon(imageVector = Icons.AutoMirrored.Filled.Comment, contentDescription = null, Modifier.size(20.dp))
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Blue
+                )
             )
-        )
 
-        TextField(
-            value = postOutfitTotalCost,
-            onValueChange = { postOutfitTotalCost = it },
-            label = { Text("Whats the total cost of your outfit?") },
-            modifier = Modifier.padding(13.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.LightGray,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Blue
-            ),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.AttachMoney, contentDescription = null, Modifier.size(20.dp))
-            },
+            TextField(
+                value = postOutfitTotalCost,
+                onValueChange = { postOutfitTotalCost = it },
+                label = { Text("Whats the total cost of your outfit?") },
+                modifier = Modifier.padding(13.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Blue
+                ),
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.AttachMoney, contentDescription = null, Modifier.size(20.dp))
+                },
 
-        )
+                )
 
 
             Button(onClick = {
@@ -142,7 +126,7 @@ fun ImageUploadLogic(postViewModel: PostViewModel, userViewModel: UserViewModel)
                     if (postCaption.isNotEmpty() && postOutfitTotalCost.isNotEmpty() && result.value != null) {
                         result.value?.let { image ->
 
-                          // Gotta handle toInt problem
+                            // Gotta handle toInt problem
                             // logic to handle adding a new post
                             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                             context.contentResolver.takePersistableUriPermission(image, flag)
@@ -170,37 +154,7 @@ fun ImageUploadLogic(postViewModel: PostViewModel, userViewModel: UserViewModel)
                 Text(text = "Add")
             }
 
-//            Button(
-//                onClick = {
-//                    postViewModel.deleteAllPost()
-//                },
-//                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
-//            ) {
-//                Text(text = "delete")
-//            }
-
-         //Must be deleted later only used for testing
-//        LazyColumn(
-//            modifier = Modifier.padding(vertical = 16.dp)
-//        ) {
-//            items(postsState) { post ->
-//                val imageUrl = post.postUrl
-//                val painter = rememberAsyncImagePainter(model = imageUrl)
-//
-//                post.postUrl.let { Text(text = it.toString()) }
-//
-//                Image(
-//                    painter = painter,
-//                    contentDescription = post.postCaption,
-//                    modifier = Modifier
-//                        .size(150.dp, 150.dp)
-//                        .padding(40.dp)
-//                )
-//
-//            }
-//        }
-
+        }
     }
-
 
 }
