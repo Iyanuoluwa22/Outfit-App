@@ -1,10 +1,13 @@
 package edu.towson.outfitapp.profile
 
 import android.app.Application
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,11 +15,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.*
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
@@ -33,14 +38,13 @@ fun ViewAUser(navController: NavController, userViewModel: UserViewModel, postVi
         topBar = { TheTopBar(navController = navController) },
         bottomBar = { TheBottomBar(navController = navController) }
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(0.914f, 0.898f, 0.898f, 1.0f))
         ) {
             Column(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -68,14 +72,23 @@ fun ViewAUser(navController: NavController, userViewModel: UserViewModel, postVi
                     ShowProgressIndicator(navController, popBack = true)
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .align(Alignment.BottomCenter)
-            ) {
-                items(userPosts) { post ->
-                    ImageCard(post = post, userViewModel = userViewModel, postViewModel = postViewModel)
-                    Spacer(modifier = Modifier.height(6.dp))
+
+
+            Column {
+                LazyVerticalGrid(modifier = Modifier.fillMaxWidth(),
+                    columns = GridCells.Adaptive(168.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ){
+                    items(userPosts) { post ->
+                        var painter = rememberAsyncImagePainter(model = post.postUrl)
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .aspectRatio(1f) // Ensure square aspect ratio
+                        )
+                    }
                 }
             }
         }

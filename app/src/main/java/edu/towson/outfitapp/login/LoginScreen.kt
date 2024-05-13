@@ -200,7 +200,12 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel, post
                 Spacer(modifier = Modifier.width(10.dp))
                 // Sign-up Button
                 Button(
-                    onClick = { navController.navigate("signUp") },
+                    onClick = {
+                        val populate = userViewModel.getAllUsers().value?.size
+                        if (populate == 0){
+                            populateData(userViewModel, postViewModel)
+                        }
+                        navController.navigate("signUp") },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
                 ) {
                     Text(text = "Sign-Up")
