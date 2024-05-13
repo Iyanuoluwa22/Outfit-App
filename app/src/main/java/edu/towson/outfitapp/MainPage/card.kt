@@ -68,9 +68,10 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
     var comments by remember { mutableStateOf(listOf<String>()) }
 
     var fakeComments = listOf(
-        " @Nu: This is TRASH!",
+        " @Nu: This looks nice!",
         " @Chris: Love the shoes",
-        " @David: L"
+        " @David: W",
+        " @James: I think you could use some more color"
     )
 
     // Card that wil display the Image, caption, price of the fit, likes, and comments.
@@ -102,7 +103,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                 mutableStateOf(Color.Gray)
             }
 
-            // Show the USername of the poster with a '@' in front of it.
+            // Show the Username of the poster with a '@' in front of it.
             Text(
                 modifier = Modifier.padding(5.dp),
                 text = "@${userName}",
@@ -127,6 +128,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
             Column(
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 10.dp)
             ){
+                // if there is a description, then add the description as a text.
                 if (description != null) {
                     Text(
                         text = description,
@@ -137,7 +139,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
-
+                // Display the cost of the fir under the description
                 Text(
                     text = "Fit Cost:  $${cost}",
                     color = Color.Black,
@@ -149,10 +151,11 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
             // Create a row to put the like button, cost of the fit, and comment section next to eachother.
             Row(modifier = Modifier.padding(5.dp)){
 
-                // Show the cost
+                // Show the like button and also the number of likes the post has.
                 TextButton(
                     onClick = {
                         like = !like    // Basic like and unlike feature
+                        // if likes do exist.
                         if(like){
                             postViewModel.likePost(context, post.postId) // Also shows a notification.
                             likedColor = Color.Red
@@ -164,7 +167,9 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                         }
                     }
                 ){
+                    // Row to store the like button
                     Row{
+                        // Create the likes Icon.
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = "Like Button",
@@ -172,6 +177,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                         )
 
                         Spacer(modifier = Modifier.width(10.dp))
+                        // Show the text of the likes
                         Text(
                             text = "Likes: ${likes}",
                             color = Color.Cyan,
@@ -222,6 +228,8 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
 
 @Composable
 fun CommentSection(
+    // Pass the comment, and on dismiss command, and the post comments to allow the function to
+    // post a new comment to the comment section.
     comments: List<String>,
     onDismiss: () -> Unit,
     postComment: (String) -> Unit
@@ -237,6 +245,7 @@ fun CommentSection(
             shape = MaterialTheme.shapes.small,
             color = Color.White
         ) {
+            // Show the comment section:
             Column(
                 modifier = Modifier.padding(.15.dp),
                 verticalArrangement = Arrangement.Center
@@ -248,7 +257,7 @@ fun CommentSection(
                     fontWeight = FontWeight.Medium
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-
+                // For each of the comments in a posts comments, show them vertically.
                 comments.forEach { comment ->
                     Text(
                         text = comment,
@@ -256,6 +265,7 @@ fun CommentSection(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal
                     )
+                    // put space between comments.
                     Spacer(modifier = Modifier.height(3.dp))
                 }
 
@@ -263,8 +273,9 @@ fun CommentSection(
                 Row(
 
                 ) {
+                    // Create a text field that allows the user to input a new comment in it.
                     TextField(
-                        value = newComment,
+                        value = newComment, // the value of the textbox is the new comment
                         onValueChange = { newComment = it },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = { postComment(newComment) }),
