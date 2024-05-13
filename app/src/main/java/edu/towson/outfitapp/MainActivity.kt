@@ -66,10 +66,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "login") {
                         composable("login") {
-                            LoginScreen(navController, userViewModel)
+                            LoginScreen(navController, userViewModel,postViewModel)
                         }
                         composable("signUp") {
-                            SignUpPage(navController, userViewModel = userViewModel, lifecycleScope)
+                            SignUpPage(navController, userViewModel = userViewModel, lifecycleScope,postViewModel)
                         }
                         composable("userProfile") {
                             UserProfileScreen(navController, userViewModel, postViewModel)

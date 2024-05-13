@@ -16,7 +16,6 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         val database = UserDatabase.getDatabase(application)
         postDao = database.postDao()
         allPost = postDao.readAllPostData()
-
     }
 
     fun getAllPosts(): LiveData<List<Post>> {
@@ -26,7 +25,6 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
     fun getPostUrl(): LiveData<List<String>> {
         return postDao.readPostUrl()
     }
-
 
     fun addPost(post: Post) {
         viewModelScope.launch {
