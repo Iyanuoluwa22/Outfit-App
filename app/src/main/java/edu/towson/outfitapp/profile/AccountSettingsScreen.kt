@@ -120,10 +120,25 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                             if (!validUsername!! || !validPassword!!) {
                                 showErrorPopup = true // Show popup if username or password is invalid
                             } else {
-                                viewModelScope.launch{
+                                viewModelScope.launch {
                                     newUsername?.let {
                                         mainUser?.userName?.let { oldUsername ->
                                             userDao.changeUsername(oldUsername, it)
+                                        }
+                                    }
+                                    newPassword?.let {
+                                        mainUser?.userName?.let { username ->
+                                            userDao.changePassword(username, it)
+                                        }
+                                    }
+                                    newFirstName?.let {
+                                        mainUser?.userName?.let { username ->
+                                            userDao.changeFirstName(username, it)
+                                        }
+                                    }
+                                    newLastName?.let {
+                                        mainUser?.userName?.let { username ->
+                                            userDao.changeLastName(username, it)
                                         }
                                     }
                                     showProgress = true

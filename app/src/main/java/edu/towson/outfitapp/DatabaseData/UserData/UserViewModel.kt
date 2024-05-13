@@ -21,11 +21,6 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         val database = UserDatabase.getDatabase(application)
         userDao = database.userDao()
         allUsers = userDao.readAllData()
-
-        // Log the number of users when LiveData is updated
-        allUsers.observeForever { users ->
-            Log.d("UserViewModel", "Number of users: ${users?.size}")
-        }
     }
 
     fun getAllUsers(): LiveData<List<User?>?> {
