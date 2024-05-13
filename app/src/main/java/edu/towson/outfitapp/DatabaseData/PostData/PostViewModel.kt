@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import edu.towson.outfitapp.DatabaseData.UserData.UserDatabase
 import kotlinx.coroutines.launch
 import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import edu.towson.outfitapp.MainPage.createNotificationChanel
 
 class PostViewModel (application: Application): AndroidViewModel(application) {
+
 
     private val postDao: PostDao
     private val allPost: LiveData<List<Post>>
@@ -52,15 +54,17 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun likePost(postid: Int){
+    fun likePost(context: Context, postid: Int){
         viewModelScope.launch {
             postDao.addLikeToPost(postid)
+            createNotificationChanel(context)
         }
     }
 
     fun unLikePost(postId: Int ){
         viewModelScope.launch {
             postDao.unLikeToPost(postId)
+
         }
     }
 
