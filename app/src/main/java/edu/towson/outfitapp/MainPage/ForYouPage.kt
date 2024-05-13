@@ -51,7 +51,8 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postV
         }
     ) { innerPadding ->
 
-
+        // Create a LazyColum that shows all of the posts by getting post from the DB and calling
+        // ImageCard() on each.
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
                 .background(Color.Black)
