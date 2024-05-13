@@ -61,14 +61,13 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel, post
     var accountNotFoundDialog by remember { mutableStateOf(false) }
     var showProgress by remember { mutableStateOf(false) }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")  // Jetpack compose boiler plate transition code
     val scale by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
+        initialValue = 0.5f,  // This here makes so the text seen in the login screen is animated
         targetValue = 1.0f,
         animationSpec = infiniteRepeatable(tween(5000), RepeatMode.Reverse),
         label = "scale"
     )
-
 
 
         Column(

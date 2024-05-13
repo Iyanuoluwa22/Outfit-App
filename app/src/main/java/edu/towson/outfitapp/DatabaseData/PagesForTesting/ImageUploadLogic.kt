@@ -41,8 +41,8 @@ fun ImageUploadLogic(navController: NavController,postViewModel: PostViewModel, 
     val context = LocalContext.current
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     val result = remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        result.value = it
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {// This what actual lets a user pick a photo within the
+        result.value = it  //
     }
     // Observe the state of posts using observeAsState inside a composable function
     val postsState by postViewModel.getAllPosts().observeAsState(initial = emptyList())
@@ -124,15 +124,14 @@ fun ImageUploadLogic(navController: NavController,postViewModel: PostViewModel, 
             Button(
                 onClick = {
                     if (postCaption.isNotEmpty() && postOutfitTotalCost.isNotEmpty() && result.value != null) {
-                        result.value?.let { image ->
+                        result.value?.let { image -> // ensures all fields are not empty
 
-                            // Gotta handle toInt problem
-                            // logic to handle adding a new post
-                            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+                            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION  // This makes sure the image that we capture in the database is sticks around and doesn't disappear
                             context.contentResolver.takePersistableUriPermission(image, flag)
 
                             val post = currentUser.value?.let {
-                                Post(
+                                Post(  // Post that is created
                                     it.userEmail,
                                     image.toString(),
                                     currentDate.toString(),
@@ -142,7 +141,7 @@ fun ImageUploadLogic(navController: NavController,postViewModel: PostViewModel, 
                                 )
                             }
                             if (post != null) {
-                                postViewModel.addPost(post)
+                                postViewModel.addPost(post) // Post is then add
                             }
                         }
                     } else {

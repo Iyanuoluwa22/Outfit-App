@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 }
                 OutfitAppTheme {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
+                    NavHost(navController = navController, startDestination = "login") {//simple Navigation menu
                         composable("login") {
                             LoginScreen(navController, userViewModel,postViewModel)
                         }

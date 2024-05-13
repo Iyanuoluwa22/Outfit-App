@@ -15,6 +15,8 @@ fun populateData(userViewModel: UserViewModel, postViewModel: PostViewModel) {
     userViewModel.addUser(User("DavidJones21@gmail.com", "DavyJones".lowercase(), "David", "Jones", "rrtvf455"))
     userViewModel.addUser(User("MaxBrown23@gmail.com", "Madder_Max".lowercase(), "Max", "Brown", "123rr455"))
 
+
+    // All code below is a simple populate function that adds new users and gives those users posts
     postViewModel.addPost(
         Post(
             "JacksBest@gmail.com",

@@ -20,7 +20,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     init {
         val database = UserDatabase.getDatabase(application)
         userDao = database.userDao()
-        allUsers = userDao.readAllData()
+        allUsers = userDao.readAllData()     // Starts off by getting all the current data within the database
 
         allUsers.observeForever { users ->
             Log.d("UserViewModel", "Number of users: ${users?.size}")
@@ -31,17 +31,17 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return allUsers
     }
 
-    fun setCurrentUser(userLiveData: LiveData<User?>) {
+    fun setCurrentUser(userLiveData: LiveData<User?>) {  // Allows us to know who the current user is
         viewModelScope.launch {
             // Observe the LiveData and get the value when it changes
-            userLiveData.observeForever { user ->
+            userLiveData.observeForever { user ->  // uses live data so we can constantly know how the current user login  is
                 // Update the value of _mainUser with the observed user value
                 _mainUser.postValue(user)
             }
         }
     }
 
-    fun setViewingUser(userLiveData: LiveData<User?>){
+    fun setViewingUser(userLiveData: LiveData<User?>){  // Lets know who's page we are looking at after
         viewModelScope.launch {
             // Observe the LiveData and get the value when it changes
             userLiveData.observeForever { user ->
