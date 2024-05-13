@@ -76,7 +76,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
 
     // Card that wil display the Image, caption, price of the fit, likes, and comments.
     Card(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(8.dp),
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -180,7 +180,7 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                         // Show the text of the likes
                         Text(
                             text = "Likes: ${likes}",
-                            color = Color.Cyan,
+                            color = Color.Black,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Light
                         )
