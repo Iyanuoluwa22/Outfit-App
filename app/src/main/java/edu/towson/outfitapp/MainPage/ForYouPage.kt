@@ -27,6 +27,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
@@ -39,6 +40,7 @@ import edu.towson.outfitapp.data.Post
 
 @Composable
 fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
+    val context = LocalContext.current
     // show all posts
     val postsState by postViewModel.getAllPosts().observeAsState(initial = emptyList())
     Scaffold(topBar = {
@@ -55,7 +57,7 @@ fun ForYouPage(navController: NavController, userViewModel: UserViewModel, postV
                 .background(Color.Black)
         ){
             items(postsState) { post ->
-                ImageCard(post = post, userViewModel = userViewModel , postViewModel = postViewModel)
+                ImageCard(post = post, userViewModel = userViewModel , postViewModel = postViewModel, context)
                 Spacer(modifier = Modifier.height(6.dp))
             }
         }

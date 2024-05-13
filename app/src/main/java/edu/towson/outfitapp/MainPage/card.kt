@@ -1,5 +1,6 @@
 package edu.towson.outfitapp.MainPage
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,7 +59,7 @@ import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 
 @Composable
-fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewModel){
+fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewModel, context: Context){
 
     // Created the variable that sees if the user clicked on a comment section:
     var lookingAtComments by remember { mutableStateOf(false) }
@@ -153,8 +154,9 @@ fun ImageCard(post: Post, userViewModel: UserViewModel, postViewModel: PostViewM
                     onClick = {
                         like = !like    // Basic like and unlike feature
                         if(like){
-                            postViewModel.likePost(post.postId)
+                            postViewModel.likePost(context, post.postId) // Also shows a notification.
                             likedColor = Color.Red
+
                         }
                         else {
                             likedColor = Color.Gray
