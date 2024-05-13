@@ -21,6 +21,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 
+
+// instead of observing the user forever the user is just observed once
 fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
     observeForever(object : Observer<T> {
         override fun onChanged(value: T) {
@@ -30,6 +32,9 @@ fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
     })
 }
 
+
+// This function shows a progress indicator and delays for 1 second before navigating to a certain page
+// can pop back, and pop up to
 @Composable
 fun ShowProgressIndicator(navController: NavController,route : String = "",
                           popBack : Boolean = false,
@@ -58,6 +63,7 @@ fun ShowProgressIndicator(navController: NavController,route : String = "",
     }
 }
 
+// A basic layout for the The top bar sections of the Scaffold
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TheTopBar(navController: NavController){
@@ -100,7 +106,8 @@ fun TheTopBar(navController: NavController){
 }
 
 
-
+// A basic layout for the The bottom bar sections of the Scaffold.
+// this section handles navigation to different pages. You can't navigate to a page you're already on
 @Composable
 fun TheBottomBar(navController : NavController){
     BottomAppBar(

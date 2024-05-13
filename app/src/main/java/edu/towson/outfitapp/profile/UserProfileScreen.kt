@@ -32,7 +32,7 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.HelperFunctions.TheBottomBar
 import edu.towson.outfitapp.HelperFunctions.TheTopBar
 
-
+// This function grabs the Main User of the app from the login/signup screen and displays their username and post history
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

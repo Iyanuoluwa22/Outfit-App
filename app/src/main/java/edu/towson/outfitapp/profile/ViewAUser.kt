@@ -28,6 +28,9 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.HelperFunctions.*
 import edu.towson.outfitapp.MainPage.ImageCard
 
+// This view a user function is a page where a user can view another users account and posts they have made
+// it is similar to the UserProfileScreen. The only difference is that you have an option to press back and go to the previous page
+// The viewing user is grabbed from the UserSearch page where a user is looked up and clicked
 @Composable
 fun ViewAUser(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
     val user by userViewModel.viewingUser.observeAsState()
@@ -73,7 +76,7 @@ fun ViewAUser(navController: NavController, userViewModel: UserViewModel, postVi
                 }
             }
 
-
+            // this column displays the photos in a grid
             Column {
                 LazyVerticalGrid(modifier = Modifier.fillMaxWidth(),
                     columns = GridCells.Adaptive(168.dp),

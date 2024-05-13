@@ -26,6 +26,11 @@ import edu.towson.outfitapp.HelperFunctions.TheBottomBar
 import edu.towson.outfitapp.HelperFunctions.TheTopBar
 import edu.towson.outfitapp.HelperFunctions.observeOnce
 import java.util.Locale
+
+
+
+// In this UserSearch function a textfield is provided so the user can search the database for a user
+// when a user is searched and the search icon is pressed specific users will be displayed
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -106,6 +111,8 @@ fun UserSearch(navController: NavController, userViewModel: UserViewModel){
     }
 }
 
+// This function sifts through a list of users that have a certain prefix when searched
+// and passes each user through a UserListItem function. A Lazy Column is in place for scrollability
 @Composable
 fun PreviewUsersWithPrefix(
     users: List<User?>,
@@ -121,6 +128,8 @@ fun PreviewUsersWithPrefix(
     }
 }
 
+// This function displays the users information within a row. The username, users first name and users last name is displayed
+// the row is clickable, when clicked the navController is navigated to the ViewUser page, where you can see the page of the user clicked on
 @Composable
 fun UserListItem(user: User,
                  userViewModel: UserViewModel,
@@ -177,7 +186,7 @@ fun UserListItem(user: User,
 }
 
 
-
+// This function just shows an alert dialog when an Account doesn't exist
 @Composable
 fun AccountNotFoundDialog(onDismiss: () -> Unit){
     AlertDialog(
@@ -195,6 +204,7 @@ fun AccountNotFoundDialog(onDismiss: () -> Unit){
 }
 
 
+// Just previews the UserSearchScreen
 @Preview
 @Composable
 fun PreviewUserSearch(){

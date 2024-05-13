@@ -29,6 +29,10 @@ import edu.towson.outfitapp.HelperFunctions.TheTopBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+// In this AccountSettingsScreen function the Main Users username, first name, last name, and password are shown in textfields.
+// theses textfields of information are mutable and can be changed. If the save changes button is clicked then the new information is
+// saved to the database. There are also a cancel (that takes you back to the previous screen), logout (takes user back to login),
+// and delete function (which deletes the account)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -210,7 +214,7 @@ fun AccountSettingsScreen(navController: NavController, userViewModel: UserViewM
                 }
             }
         )
-    }else if (showDeleteConfirmation) {
+    }else if (showDeleteConfirmation) { // shows delete confirmation for when delete button is pressed.
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
             title = {

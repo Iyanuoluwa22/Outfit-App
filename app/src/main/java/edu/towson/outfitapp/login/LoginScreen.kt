@@ -225,7 +225,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel, post
 
 
 
-
+// shows an alert dialog when invalid credentials are inputted
 @Composable
 fun ShowAlertDialog(onDismiss: () -> Unit) {
     AlertDialog(
@@ -272,6 +272,7 @@ fun ShowWrongPasswordDialog(onDismiss: () -> Unit) {
     )
 }
 
+// shows an alert dialog when account can be found
 @Composable
 fun ShowAccountDialog(onDismiss: () -> Unit) {
     AlertDialog(

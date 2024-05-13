@@ -5,6 +5,7 @@ import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.*
 import edu.towson.outfitapp.DatabaseData.PostData.*
 
+// populates the app with users
 fun populateData(userViewModel: UserViewModel, postViewModel: PostViewModel) {
     // Add users
     userViewModel.addUser(User("JacksBest@gmail.com", "JackBest010".lowercase(), "Jack", "Rider", "1234553"))

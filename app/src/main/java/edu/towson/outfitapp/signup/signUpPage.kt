@@ -43,6 +43,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.format.TextStyle
 
+// In this SignUpPage function TextFields containing a username, firstname, lastname, email, and password are shown
+// The user inputs texts in each of these fields and populated into the database when the signup button is pressed
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SignUpPage(navController: NavController, userViewModel: UserViewModel,
@@ -240,7 +242,7 @@ fun SignUpPage(navController: NavController, userViewModel: UserViewModel,
                     }
                 }
             )
-        } else if(accountExistDialog){
+        } else if(accountExistDialog){ // throws dialog when account already exists
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = { Text(text = "Account Exists Already") },
