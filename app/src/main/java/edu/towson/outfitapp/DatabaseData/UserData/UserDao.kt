@@ -13,7 +13,7 @@ interface UserDao {
     suspend fun addUser(user: User) // How to add a single user
 
     @Query("SELECT * FROM users ORDER BY userEmail ASC ")  // Gets all users
-    fun readAllData(): LiveData<List<User>>
+    fun readAllData(): LiveData<List<User?>?>
 
     @Delete
     suspend fun deleteUser(user: User) // How to delete a user

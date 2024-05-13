@@ -96,7 +96,7 @@ fun UserSearch(navController: NavController, userViewModel: UserViewModel){
             }
 
             previewUsers?.let { users ->
-                PreviewUsersWithPrefix(users)
+                PreviewUsersWithPrefix(users,userViewModel,navController)
             }
 
             if(accountNF){
@@ -107,23 +107,34 @@ fun UserSearch(navController: NavController, userViewModel: UserViewModel){
 }
 
 @Composable
-fun PreviewUsersWithPrefix(users: List<User?>) {
+fun PreviewUsersWithPrefix(
+    users: List<User?>,
+    userViewModel: UserViewModel,
+    navController: NavController
+) {
     LazyColumn {
         items(users) { user ->
             user?.let {
-                UserListItem(user = user)
+                UserListItem(user = user,userViewModel,navController)
             }
         }
     }
 }
 
 @Composable
-fun UserListItem(user: User) {
+fun UserListItem(user: User,
+                 userViewModel: UserViewModel,
+                 navController: NavController) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { /* Handle click */ },
+            .clickable {
+                userViewModel.resetViewingUser()
+                val viewUser = userViewModel.getUserByUsername(user.userName)
+                userViewModel.setViewingUser(viewUser)
+                navController.navigate("viewUser")
+            },
         color = Color.LightGray, // Set the background color
         shape = MaterialTheme.shapes.medium, // Optional: Apply a shape to the surface
     ) {
@@ -132,14 +143,17 @@ fun UserListItem(user: User) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-                    .padding(5.dp),
-                tint = Color(4282002273)
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(5.dp),
+                    tint = Color(4282002273)
+                )
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

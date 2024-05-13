@@ -31,19 +31,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.towson.outfitapp.DatabaseData.PagesForTesting.MyDialog
+import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import edu.towson.outfitapp.data.isValidEmail
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
+import edu.towson.outfitapp.data.populateData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.format.TextStyle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewModelScope: CoroutineScope) {
+fun SignUpPage(navController: NavController, userViewModel: UserViewModel,
+               viewModelScope: CoroutineScope,
+               postViewModel: PostViewModel
+) {
     val users by userViewModel.getAllUsers().observeAsState(initial = emptyList())
 
     var userName by remember { mutableStateOf("") }
@@ -180,6 +185,10 @@ fun SignUpPage(navController: NavController, userViewModel: UserViewModel, viewM
             Spacer(modifier = Modifier.width(10.dp))
             Button(
                 onClick = {
+                    val populate = userViewModel.getAllUsers().value?.size
+                    if (populate == 0){
+                        populateData(userViewModel, postViewModel)
+                    }
                     // Ensure all fields are filled
                     if (firstName.isNotEmpty() && lastName.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty() && password.isNotEmpty()) {
                         // Check for valid email, username, and password
@@ -265,5 +274,5 @@ fun PreviewSignUpPage(){
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    SignUpPage(rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
+    //SignUpPage(rememberNavController(), dummyUserViewModel, rememberCoroutineScope())
 }

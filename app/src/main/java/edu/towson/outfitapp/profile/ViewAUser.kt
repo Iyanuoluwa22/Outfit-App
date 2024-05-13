@@ -1,45 +1,39 @@
 package edu.towson.outfitapp.profile
 
-
-import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ContentScale.Companion.Crop
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import androidx.navigation.*
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
-import edu.towson.outfitapp.HelperFunctions.TheBottomBar
-import edu.towson.outfitapp.HelperFunctions.TheTopBar
+import edu.towson.outfitapp.HelperFunctions.*
+import edu.towson.outfitapp.MainPage.ImageCard
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
-    val mainUser by userViewModel.mainUser.observeAsState()
+fun ViewAUser(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
+    val user by userViewModel.viewingUser.observeAsState()
     val allPosts by postViewModel.getAllPosts().observeAsState(initial = emptyList())
-    val userPosts = allPosts.filter { post -> post.userEmail == mainUser?.userEmail }
+    val userPosts = allPosts.filter { post -> post.userEmail == user?.userEmail }
+    var showProgress by remember { mutableStateOf(false) }
     Scaffold(
         topBar = { TheTopBar(navController = navController) },
         bottomBar = { TheBottomBar(navController = navController) }
@@ -65,51 +59,46 @@ fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    mainUser?.let { Username(it) }
+                    user?.let { Username(it) }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { showProgress = true },
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text(text = "Back")
+                }
+                if (showProgress) {
+                    ShowProgressIndicator(navController, popBack = true)
                 }
             }
 
+
             Column {
                 LazyVerticalGrid(modifier = Modifier.fillMaxWidth(),
-                        columns = GridCells.Adaptive(168.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                    columns = GridCells.Adaptive(168.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ){
-                        items(userPosts) { post ->
-                            var painter = rememberAsyncImagePainter(model = post.postUrl)
-                            Image(
-                                painter = painter,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .aspectRatio(1f) // Ensure square aspect ratio
-                            )
-                        }
+                    items(userPosts) { post ->
+                        var painter = rememberAsyncImagePainter(model = post.postUrl)
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .aspectRatio(1f) // Ensure square aspect ratio
+                        )
+                    }
                 }
             }
         }
     }
-
 }
 
-@Composable
-fun ProfilePicture() {
-    // Replace with image resource
-    Icon(
-        imageVector = Icons.Default.Person,
-        contentDescription = "Profile Picture of user",
-        Modifier.size(50.dp)
-    )
-}
-
-@Composable
-fun Username(mainUser: User) {
-    Text(text = mainUser.userName, color = Color.Black,
-        fontFamily = FontFamily.Monospace)
-}
 
 @Preview
 @Composable
-fun PreviewUserProfileScreen() {
+fun PreviewViewAUser(){
     val dummyUser = User("test@gmail.com", "test", "gang", "gang", "gang")
     val userLiveData = MutableLiveData<User>()
     userLiveData.value = dummyUser
@@ -117,5 +106,5 @@ fun PreviewUserProfileScreen() {
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    //UserProfileScreen(navController = rememberNavController(), userViewModel = dummyUserViewModel)
+   // ViewAUser(rememberNavController(), userViewModel = dummyUserViewModel)
 }

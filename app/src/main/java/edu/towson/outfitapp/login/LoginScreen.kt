@@ -37,12 +37,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.towson.outfitapp.DatabaseData.PostData.PostViewModel
 import edu.towson.outfitapp.DatabaseData.UserData.User
 import edu.towson.outfitapp.DatabaseData.UserData.UserViewModel
 import edu.towson.outfitapp.HelperFunctions.observeOnce
 import edu.towson.outfitapp.HelperFunctions.ShowProgressIndicator
 import edu.towson.outfitapp.data.isValidPassword
 import edu.towson.outfitapp.data.isValidUsername
+import edu.towson.outfitapp.data.populateData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -50,9 +52,8 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel, postViewModel: PostViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -169,6 +170,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Button(
                     onClick = {
                         // new var
+                        val populate = userViewModel.getAllUsers().value?.size
+                        if (populate == 0){
+                            populateData(userViewModel, postViewModel)
+                        }
                         val user = userViewModel.loginCheck(userName, password)
                         val validUsername = isValidUsername(userName)
                         val validPassword = isValidPassword(password)
@@ -195,7 +200,12 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.width(10.dp))
                 // Sign-up Button
                 Button(
-                    onClick = { navController.navigate("signUp") },
+                    onClick = {
+                        val populate = userViewModel.getAllUsers().value?.size
+                        if (populate == 0){
+                            populateData(userViewModel, postViewModel)
+                        }
+                        navController.navigate("signUp") },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
                 ) {
                     Text(text = "Sign-Up")
@@ -296,6 +306,6 @@ fun PreviewLoginScreen() {
     val application = applicationContext as Application // Cast the context to an Application
     val dummyUserViewModel = UserViewModel(application)
     dummyUserViewModel.setCurrentUser(userLiveData)
-    LoginScreen(navController = rememberNavController(), dummyUserViewModel)
+   // LoginScreen(navController = rememberNavController(), dummyUserViewModel)
 }
 
